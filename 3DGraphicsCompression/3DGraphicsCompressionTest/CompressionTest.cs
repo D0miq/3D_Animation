@@ -5,6 +5,7 @@ using Rhino.Mocks;
 using _3DGraphicsCompression.ObjParser;
 using System.IO;
 using MathNet.Numerics.LinearAlgebra;
+using System.Collections.Generic;
 
 namespace _3DGraphicsCompressionTest
 {
@@ -15,8 +16,15 @@ namespace _3DGraphicsCompressionTest
         public void TestAdd()
         {
             Compression compression = new Compression();
-            var fileReader = MockRepository.GenerateStub<IFileReader>();
+            var fileReader = MockRepository.GenerateMock<IFileReader>();
+            Mesh mesh = new Mesh(new List<Face>() { new Face() }, new List<float>() { 1, 2 }, new List<float>() { 3, 4 });
+            fileReader.Expect(x => x.Read(null)).IgnoreArguments()
+                .Do((Func<ListBuffer<float>, Mesh>)(input => {
+                    return mesh;
+                }));
+
             compression.AddFile(fileReader);
+            Assert.AreSame(mesh, compression.CompressedMesh);
         }
 
         [TestMethod]
@@ -26,7 +34,6 @@ namespace _3DGraphicsCompressionTest
             Compression compression = new Compression();
             var fileReader = MockRepository.GenerateMock<IFileReader>();
             fileReader.Expect(x => x.Read(null)).IgnoreArguments().Throw(new IOException());
-            fileReader.Expect(x => x.ReadVertices(null)).IgnoreArguments().Throw(new IOException());
             compression.AddFile(fileReader);
         }
 

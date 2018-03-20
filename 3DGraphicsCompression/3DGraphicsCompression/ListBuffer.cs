@@ -72,7 +72,7 @@
         {
             if (this.size == this.buffer.Length)
             {
-                Array.Resize(ref this.buffer, this.buffer.Length * 2);
+                this.Capacity = this.buffer.Length * 2;
             }
 
             this.buffer[this.size++] = item;
@@ -87,7 +87,7 @@
         {
             if (this.size + items.Length > this.buffer.Length)
             {
-                Array.Resize(ref this.buffer, this.size + items.Length);
+                this.Capacity = this.size + items.Length;
             }
 
             Array.Copy(items, 0, this.buffer, this.size, items.Length);
@@ -103,7 +103,7 @@
         {
             if (this.size + items.Count > this.buffer.Length)
             {
-                Array.Resize(ref this.buffer, this.size + items.Count);
+                this.Capacity = this.size + items.Count;
             }
 
             items.CopyTo(this.buffer, this.size);

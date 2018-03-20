@@ -67,6 +67,7 @@
         /// </summary>
         /// <param name="values">Three strings where each represents a vertex in a face.</param>
         /// <returns>Created face.</returns>
+        /// <exception cref="System.IndexOutOfRangeException">When the given string array has lower values than 3. Wrong format of face.</exception>
         public Face FromString(string[] values)
         {
             for (int i = 0; i < VALUES_COUNT; i++)
