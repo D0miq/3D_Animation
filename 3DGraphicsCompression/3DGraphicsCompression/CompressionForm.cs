@@ -83,7 +83,7 @@
 
             try
             {
-                FileWriter writer = new FileWriter(string.Format(@"3DAnimation{0}.3abf", DateTime.Now.Ticks));
+                FileWriter writer = new FileWriter(string.Format(@"3DAnimation{0}.3ba", DateTime.Now.Ticks));
                 writer.WriteTrajectory(compression.AverageTrajectory);
                 writer.WriteEigenVectors(compression.SubEigenVectors);
                 writer.WriteControlTrajectories(compression.ControlTrajectories);
