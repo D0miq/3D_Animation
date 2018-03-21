@@ -57,11 +57,9 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MeshTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CompressionTest.cs" />
     <Compile Include="FaceTest.cs" />
-    <Compile Include="ListBufferTest.cs" />
     <Compile Include="ObjFileReaderTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -48,6 +48,8 @@
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Log.Info("Background worker starts.");
+            Log.Debug("Background worker argument: " + (int)e.Argument);
+
             Compression compression = new Compression();
 
             for (int i = 0; i < this.listFiles.CheckedItems.Count; i++)
@@ -58,7 +60,13 @@
                 try
                 {
                     IFileReader fileReader = new ObjFileReader(path);
-                    compression.AddFile(fileReader);
+                    if (compression.FramesCount != 0)
+                    {
+                        compression.AddFrame(fileReader.ReadVertices());
+                    } else
+                    {
+                        compression.AddFrame(fileReader.ReadAll());
+                    }
                 }
                 catch (IOException ex)
                 {
@@ -71,18 +79,17 @@
                 }
             }
 
-            Log.Debug("Background worker argument: " + (int)e.Argument);
-            compression.CompressVertices((int)e.Argument);
+            compression.CompressFrames((int)e.Argument);
 
             try
             {
-                FileWriter writer = new FileWriter(string.Format(@"3Danimation{0}.3gbf", DateTime.Now.Ticks));
+                FileWriter writer = new FileWriter(string.Format(@"3DAnimation{0}.3abf", DateTime.Now.Ticks));
                 writer.WriteTrajectory(compression.AverageTrajectory);
                 writer.WriteEigenVectors(compression.SubEigenVectors);
                 writer.WriteControlTrajectories(compression.ControlTrajectories);
-                writer.WriteFaces(compression.CompressedMesh.Faces);
-                writer.WriteTextures(compression.CompressedMesh.TextureCoords);
-                writer.WriteTextures(compression.CompressedMesh.Normals);
+                writer.WriteFaces(compression.Frame.Faces);
+                writer.WriteTextures(compression.Frame.TextureCoords);
+                writer.WriteTextures(compression.Frame.Normals);
                 writer.Close();
             } catch (Exception ex)
             {
@@ -122,11 +129,13 @@
         /// <param name="e">Arguments of the event.</param>
         private void AddFilesBT_Click(object sender, EventArgs e)
         {
-            Log.Info("Clicked on add files button.");
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Obj Files|*.obj";
-            openFileDialog.Title = "Select a 3D files";
-            openFileDialog.Multiselect = true;
+            Log.Info("Clicked on the add files button.");
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Obj Files|*.obj",
+                Title = "Select 3D files",
+                Multiselect = true
+            };
 
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {

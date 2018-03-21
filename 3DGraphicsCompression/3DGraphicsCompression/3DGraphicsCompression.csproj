@@ -83,10 +83,9 @@
       <DependentUpon>CompressionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FileWriter.cs" />
-    <Compile Include="ListBuffer.cs" />
     <Compile Include="ObjParser\Face.cs" />
     <Compile Include="ObjParser\IFileReader.cs" />
-    <Compile Include="ObjParser\Mesh.cs" />
+    <Compile Include="ObjParser\Frame.cs" />
     <Compile Include="ObjParser\ObjFileReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -36,7 +36,7 @@
         /// Initializes a new instance of the <see cref="ObjFileReader"/> class.
         /// </summary>
         /// <param name="path">Path of a file that is going to be read.</param>
-        /// <exception cref="IOException">File can not be read.</exception>
+        /// <exception cref="IOException">Unable to read the file.</exception>
         /// <exception cref="ArgumentException">Invalid argument.</exception>
         public ObjFileReader(string path)
         {
@@ -46,20 +46,19 @@
         }
 
         /// <summary>
-        /// Gets path of a read file.
+        /// Gets the path of a read file.
         /// </summary>
         public string Path => this.path;
 
         /// <summary>
         /// Reads all data from an obj file. Read data are vertices, texture coordinates, faces and normals.
-        /// Vertices are saved into the given <paramref name="verticesBuffer"/> and rest is returned in a <see cref="Mesh"/>.
-        /// If file does not contain textures or normals returned lists in the <see cref="Mesh"/> are empty except faces, they have to be present in a file.
+        /// If the file does not contain textures or normals, returned lists in the <see cref="Frame"/> are empty, except faces, they always have to be present in the file.
         /// </summary>
-        /// <param name="verticesBuffer">The buffer that contains vertices.</param>
-        /// <returns>Mesh contains texture coordinates, faces and normals.</returns>
-        /// <exception cref="IOException">File cannot be read.</exception>
-        public Mesh Read(ListBuffer<float> verticesBuffer)
+        /// <returns>The mesh contains vertices, texture coordinates, faces and normals.</returns>
+        /// <exception cref="IOException">Unable to read from the file.</exception>
+        public Frame ReadAll()
         {
+            List<float> vertices = new List<float>();
             List<Face> faces = new List<Face>();
             List<float> textureCoords = new List<float>();
             List<float> normals = new List<float>();
@@ -67,27 +66,31 @@
             string line;
             while ((line = this.reader.ReadLine()) != null)
             {
-                this.CheckVertex(line, verticesBuffer);
+                this.CheckVertex(line, vertices);
                 this.CheckFace(line, faces);
                 this.CheckTextureCoords(line, textureCoords);
                 this.CheckNormal(line, normals);
             }
 
-            return new Mesh(faces, textureCoords, normals);
+            return new Frame(vertices, faces, textureCoords, normals);
         }
 
         /// <summary>
-        /// Reads vertices from an obj file and saves them into the given <paramref name="verticesBuffer"/>.
+        /// Reads vertices from an obj file. It goes through the whole file.
         /// </summary>
-        /// <param name="verticesBuffer">The buffer that contains vertices.</param>
-        /// <exception cref="IOException">File cannot be read.</exception>
-        public void ReadVertices(ListBuffer<float> verticesBuffer)
+        /// <returns>The list that contains vertices.</returns>
+        /// <exception cref="IOException">Unable to read from the file.</exception>
+        public List<float> ReadVertices()
         {
+            List<float> vertices = new List<float>();
+
             string line;
             while ((line = this.reader.ReadLine()) != null)
             {
-                this.CheckVertex(line, verticesBuffer);
+                this.CheckVertex(line, vertices);
             }
+
+            return vertices;
         }
 
         /// <summary>
@@ -99,32 +102,32 @@
         }
 
         /// <summary>
-        /// Checks if the given line contains a vertex and if so, adds it to the buffer.
+        /// Checks if the given line contains a vertex and if so, adds it to the list.
         /// </summary>
-        /// <param name="line">Line of a file.</param>
-        /// <param name="verticesBuffer">Buffer of vertices.</param>
-        private void CheckVertex(string line, ListBuffer<float> verticesBuffer)
+        /// <param name="line">The line of a file.</param>
+        /// <param name="vertices">The list of vertices.</param>
+        private void CheckVertex(string line, List<float> vertices)
         {
             if (line.StartsWith("v "))
             {
                 string[] stringValues = line.Split(' '); // Values in a read line.
 
                 float.TryParse(stringValues[1], NumberStyles.Float, CultureInfo, out float vertexCoord);
-                verticesBuffer.Add(vertexCoord);
+                vertices.Add(vertexCoord);
 
                 float.TryParse(stringValues[2], NumberStyles.Float, CultureInfo, out vertexCoord);
-                verticesBuffer.Add(vertexCoord);
+                vertices.Add(vertexCoord);
 
                 float.TryParse(stringValues[3], NumberStyles.Float, CultureInfo, out vertexCoord);
-                verticesBuffer.Add(vertexCoord);
+                vertices.Add(vertexCoord);
             }
         }
 
         /// <summary>
         /// Checks if the given line contains a face and if so, adds it to the list.
         /// </summary>
-        /// <param name="line">Line of a file.</param>
-        /// <param name="faces">List of faces.</param>
+        /// <param name="line">The line of a file.</param>
+        /// <param name="faces">The list of faces.</param>
         private void CheckFace(string line, List<Face> faces)
         {
             if (line.StartsWith("f "))
@@ -137,8 +140,8 @@
         /// <summary>
         /// Checks if the given line contains a texture coordinates and if so, adds it to the list.
         /// </summary>
-        /// <param name="line">Line of a file.</param>
-        /// <param name="textureCoords">List of texture coordinates.</param>
+        /// <param name="line">The line of a file.</param>
+        /// <param name="textureCoords">The list of texture coordinates.</param>
         private void CheckTextureCoords(string line, List<float> textureCoords)
         {
             if (line.StartsWith("vt "))
@@ -156,8 +159,8 @@
         /// <summary>
         /// Checks if the given line contains a normal and if so, adds it to the list.
         /// </summary>
-        /// <param name="line">Line of a file.</param>
-        /// <param name="normals">List of normals.</param>
+        /// <param name="line">The line of a file.</param>
+        /// <param name="normals">The list of normals.</param>
         private void CheckNormal(string line, List<float> normals)
         {
             if (line.StartsWith("vn "))
