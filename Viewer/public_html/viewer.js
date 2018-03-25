@@ -1,71 +1,98 @@
 var gl;
-var squareVerticesBuffer;   
-var vertexPositionAttribute;
 
-//---------------------------------- File reader ----------------------------------
-class FileReader3abf {
-    constructor(path){
-        console.log("Open stream to file " + path);
-        this.path = path;
-        this.position = 0;
+//---------------------------------- File reader ---------------------------------- DONE
+class FileReader3BA {
+    constructor(file){
+        var position = 0;
         
-        function readFileFromServer(numberOfBytes) {
-            console.log("File position " + this.position);
-            console.log("Number of read bytes " + numberOfBytes);
-            
-            var fileContent;
-            
-            var request = new XMLHttpRequest();
-            request.open("GET", this.path, true);
-            request.responseType = "arraybuffer";
-            request.setRequestHeader("Range", "bytes=" + this.position + "-" + numberOfBytes);
-            request.onload = function (oEvent) {
-                var arrayBuffer = this.request.response; // Note: not oReq.responseText
-                if (arrayBuffer) {
-                    fileContent = arrayBuffer;
-                } else {
-                    console.log("File " + this.path + " not read properly");
-                }
-            };
-            
-            this.position = this.position + numberOfBytes;
-            
-            return fileContent;
-        }
+        function getContent(numberOfBytes) {
+            if (position < file.byteLength) {
+                var content = file.slice(position, position + numberOfBytes);
+                position = position + numberOfBytes;
+                return content;
+            } else {
+                return null;
+            }
+        };
         
         this.readAverageTrajectory = function () {
-            var trajectoryLength = new Int32Array(readFileFromServer(4))[0];
-            console.log("Trajectory length " + trajectoryLength);
-            return new Float32Array(readFileFromServer(trajectoryLength * 4));
-        }
+            var trajectoryLength = new Int32Array(getContent(4))[0];
+            console.log("Trajectory length", trajectoryLength);
+            return Array.from(new Float32Array(getContent(trajectoryLength * 4)));
+        };
         
         this.readEigenVectors = function () {
-            var dataDimensions = new Int32Array(readFileFromServer(8));
-            console.log("Eigen vectors rows length " + dataDimensions[0]);
-            console.log("Eigen vectors columns length " + dataDimensions[1]);
-            return new Float32Array(readFileFromServer(dataDimensions[0] * dataDimensions[1] * 4));
+            var dataDimensions = new Int32Array(getContent(8));
+            console.log("Eigen vectors rows length", dataDimensions[0]);
+            console.log("Eigen vectors columns length", dataDimensions[1]);
+            var eigenVectors = new Float32Array(getContent(dataDimensions[0] * dataDimensions[1] * 4));
+            var matrixArray = [];
+            for (var i = 0; i < dataDimensions[0]; i++) {
+                matrixArray[i] = Array.from(eigenVectors.slice(dataDimensions[1] * i, dataDimensions[1] * (i + 1)));
+            }
+
+            return math.matrix(matrixArray, "dense", "number");
         };
         
         this.readControlTrajectories = function () {
-            var dataDimensions = new Int32Array(readFileFromServer(8));
-            console.log("Control trajectories rows length " + dataDimensions[0]);
-            console.log("Control trajectories columns length " + dataDimensions[1]);
-            return new Float32Array(readFileFromServer(dataDimensions[0] * dataDimensions[1] * 4));
+            var dataDimensions = new Int32Array(getContent(8));
+            console.log("Control trajectories rows length", dataDimensions[0]);
+            console.log("Control trajectories columns length", dataDimensions[1]);
+            var controlTrajectories = new Float32Array(getContent(dataDimensions[0] * dataDimensions[1] * 4));
+            var matrixArray = [];
+            for (var i = 0; i < dataDimensions[0]; i++) {
+                matrixArray[i] = Array.from(controlTrajectories.slice(dataDimensions[1] * i, dataDimensions[1] * (i + 1)));
+            }
+            
+            return math.matrix(matrixArray, "dense", "number");
         };
         
         this.readFaces = function () {
-            var facesLength = new Int32Array(readFileFromServer(4))[0];
-            console.log("Faces length " + facesLength);
-            return new Float32Array(readFileFromServer(facesLength * 4));
+            var facesLength = new Int32Array(getContent(4))[0];
+            console.log("Faces length", facesLength);
+            return new Float32Array(getContent(facesLength * 4 * 9));
+        };
+        
+        this.readTextures = function () {
+            var texturesLength = new Int32Array(getContent(4))[0];
+            console.log("Textures length", texturesLength);
+            return texturesLength == 0 ? null : new Float32Array(getContent(texturesLength * 4));
+        };
+        
+        this.readNormals = function () {
+            var normalsLength = new Int32Array(getContent(4))[0];
+            console.log("Normals length", normalsLength);
+            return normalsLength == 0 ? null : new Float32Array(getContent(normalsLength * 4));
         };
     }
     
     readFile() {
-        this.averageTrajectory = this.readAverageTrajectory();
-        this.eigenVectors = this.readEigenVectors();
-        this.controlTrajectories = this.readControlTrajectories();
+        var averageTrajectory = this.readAverageTrajectory();
+        var eigenVectors = this.readEigenVectors();
+        console.log(eigenVectors);
+        var controlTrajectories = this.readControlTrajectories();
+        console.log(controlTrajectories);
         this.faces = this.readFaces();
-    }
+        this.textures = this.readTextures();
+        this.normals = this.readNormals();
+        var s = math.multiply(eigenVectors, controlTrajectories);
+        var b = s.map(function (value, index, matrix) {
+            return value + averageTrajectory[index[0]];
+        });
+        
+        this.vertices = [];
+        var size = math.size(b).valueOf();
+        for(var i = 0; i < size[0]; i += 3) {
+            var frame = [];
+            for(var j = 0; j < size[1] * 3; j += 3) {
+                frame[j] = b.subset(math.index(i,j / 3));
+                frame[j + 1] = b.subset(math.index(i + 1,j / 3));
+                frame[j + 2] = b.subset(math.index(i + 2,j / 3));
+            }
+            
+            this.vertices[i / 3] = frame;
+        }
+   }
 }
 
 //---------------------------------- Shaders ----------------------------------
@@ -95,7 +122,7 @@ class Shader {
 
         //check shader compile status
         if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
-            console.log("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader));
+            console.log("An error occurred compiling the shaders:", gl.getShaderInfoLog(shader));
             gl.deleteShader(shader);
             return null;
         }
@@ -109,11 +136,12 @@ class VertexShader extends Shader {
         super();
         this.type = gl.VERTEX_SHADER;
         this.source = `
-            attribute vec3 aVertexPosition;
-
-            void main(void){
-              gl_Position = vec4(aVertexPosition, 1.0);
-              gl_PointSize = 50.0;
+            attribute vec4 aVertexPosition;
+            uniform mat4 uModelViewMatrix;
+            uniform mat4 uProjectionMatrix;
+        
+            void main() {
+                gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
             }
         `;
     }
@@ -131,24 +159,108 @@ class FragmentShader extends Shader {
     }
 }
 
+//---------------------------------- Camera ---------------------------------- DONE
+class CameraMovement {
+    constructor(canvas) { 
+        var lastTranslationX = 0;
+        var lastTranslationY = 0;
+        var lastRotationX = 0;
+        var lastRotationY = 0;
+        var clickX = 0;
+        var clickY = 0;
+        var translation = [0.0, 0.0, -6.0];
+        var rotation = [0, 0, 0];
+        var scaling = [1, 1, 1];
+
+        function movedTranslation(event) {
+            if (event.buttons == 4) {
+                translation = [lastTranslationX + (event.clientX - clickX) / canvas.width, lastTranslationY + (clickY - event.clientY) / canvas.height, translation[2]];
+                console.log(translation);
+            } else {
+                lastTranslationX = translation[0];
+                lastTranslationY = translation[1];
+                canvas.removeEventListener("mousemove", movedTranslation);
+            }
+        }
+
+        function movedRotation(event) {
+            if (event.buttons == 1) {
+                rotation = [lastRotationX + (clickY - event.clientY) * Math.PI / 180, lastRotationY + (event.clientX - clickX) * Math.PI / 180, rotation[2]];
+                console.log(rotation);
+            } else {
+                lastRotationX = rotation[0];
+                lastRotationY = rotation[1];
+                canvas.removeEventListener("mousemove", movedRotation);
+            }
+        }
+        
+        this.getTranslation = function() {
+            return translation;
+        }
+        
+        this.getRotation = function() {
+            return rotation;
+        }
+        
+        this.getScaling = function() {
+            return scaling;
+        }
+        
+        canvas.onmousedown = function(event) {
+            clickX = event.clientX;
+            clickY = event.clientY;
+            if (event.button == 0) {
+                console.log("Left button");
+                canvas.addEventListener("mousemove", movedRotation, false);
+            } else if(event.button == 1) {
+                console.log("Middle button");
+                canvas.addEventListener("mousemove", movedTranslation, false);
+            }
+        };
+        
+        canvas.addEventListener("wheel", event => {
+            if (event.deltaY < 0) {
+                scaling[0] = scaling[0] - 0.1;
+                scaling[1] = scaling[1] - 0.1;
+                scaling[2] = scaling[2] - 0.1;
+            } else {
+                scaling[0] = scaling[0] + 0.1;
+                scaling[1] = scaling[1] + 0.1;
+                scaling[2] = scaling[2] + 0.1;
+            }
+
+            console.log(scaling);
+        });
+    }
+}
+
 //---------------------------------- Webgl ----------------------------------
 class Webgl {
-    constructor(canvas) {
-        gl = null;
-        
-        console.log("Get canvas element by " + canvas + " id");
-        canvas = document.getElementById(canvas);
-        
+    constructor(canvas, camera, vertices, faces, textures = null, normals = null) {
+        console.log("Canvas element:", canvas);
+        this.camera = camera;
+        this.vertices = vertices;
+        this.faces = faces;
+        this.textures = textures;
+        if (normals == null) {
+            this.normals = computeNormals(vertices, faces);
+        } else {
+            this.normals = normals;
+        }
+
         //inicialize with standart webGl or experimental if the first one is not enabled
         //gl = canvas.getContext("webgl") | canvas.getContext("experimental-webgl");
         gl = canvas.getContext("webgl");
-
         if(!gl){
           alert("Unable to initialize webgl context");
         }
+        
+        function computeNormals(vertices, faces) {
+            
+        }
     }
     
-    initShaders() {
+    startAnimation() {
         var fragmentShader = new FragmentShader();
         var vertexShader = new VertexShader();
 
@@ -160,58 +272,58 @@ class Webgl {
 
         //if creating shader program failed
         if(!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)){
-          console.log("Unable to initialize the shader program: " + gl.getProgramInfoLog(shaderProgram));
+          console.log("Unable to initialize the shader program:", gl.getProgramInfoLog(shaderProgram));
         }
-
-        gl.useProgram(shaderProgram);
-
-        vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-        gl.enableVertexAttribArray(vertexPositionAttribute);
-    }
-    
-    initBuffer(){
+        
+        var vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+        var projectionMatrixLocation = gl.getUniformLocation(shaderProgram, 'uProjectionMatrix');
+        var modelViewMatrixLocation = gl.getUniformLocation(shaderProgram, 'uModelViewMatrix');
+        
         console.log("Initialize buffers"); 
-        squareVerticesBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, squareVerticesBuffer);
-        var vertices = [0.5, 0.5, 0.0];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        gl.vertexAttribPointer(vertexPositionAttribute, 2, gl.FLOAT, false, 0, 0);
-    }
-
-    
-    addVertices(vertices) {
         
-    }
-    
-    addTextures(textureCoordinates) {
-        
-    }
-    
-    drawScene() {
-        console.log("Drawing a scene");
-        //set background
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        //enable depth testing
-        gl.enable(gl.DEPTH_TEST);
-        //near thing obscure far
-        gl.depthFunc(gl.LEQUAL);
-        //clear color and depth buffer
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        var positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
 
-        gl.drawArrays(gl.POINTS, 0, 1);
-    }
-}
-
-class WebglUtils {
-    static resizeCanvas(glCanvas) {
+        var camera = this.camera;
+        var vertices = this.vertices;
         
-    }
-}
-
-//---------------------------------- Camera ----------------------------------
-class CameraMovement {
-    constructor() {
+        requestAnimationFrame(drawScene);
         
+        function drawScene() {
+            console.log("Drawing a scene");
+            //set background
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            //enable depth testing
+            gl.enable(gl.DEPTH_TEST);
+            //near thing obscure far
+            gl.depthFunc(gl.LEQUAL);
+            //clear color and depth buffer
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+            gl.useProgram(shaderProgram);
+
+            gl.enableVertexAttribArray(vertexPositionAttribute);
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+
+            var projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, Math.PI / 4, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 100.0);
+            
+            var modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, camera.getTranslation());
+            mat4.rotateX(modelViewMatrix, modelViewMatrix, camera.getRotation()[0]);
+            mat4.rotateY(modelViewMatrix, modelViewMatrix, camera.getRotation()[1]);
+            mat4.rotateZ(modelViewMatrix, modelViewMatrix, camera.getRotation()[2]);
+            mat4.scale(modelViewMatrix, modelViewMatrix, camera.getScaling());
+           
+            gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
+            gl.uniformMatrix4fv(modelViewMatrixLocation, false, modelViewMatrix);
+
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertices.length / 3);
+
+            requestAnimationFrame(drawScene);
+        }
     }
 }
 
@@ -219,13 +331,38 @@ class CameraMovement {
 function main(canvas, path){
     console.log("Starting webgl viewer");
     
-    var webgl = new Webgl(canvas);
-  
-    if(!gl){
-      return;
-    }
-    
-    webgl.initShaders();
-    webgl.initBuffer();
-    webgl.drawScene();
+    console.log("Downloading file", path, "from the server");
+    var request = new XMLHttpRequest();
+    request.open("GET", path);
+    request.responseType = "arraybuffer";
+    request.onload = function (e) {
+        var file = request.response;
+        console.log(file);
+
+        if (file) {
+            var fileReader = new FileReader3BA(file);
+            fileReader.readFile();
+            
+            /*var positions = [
+                1.0, 1.0, 
+                -1.0, 1.0,  
+                1.0, -1.0, 
+                -1.0, -1.0,
+            ];*/
+            
+            canvas = document.getElementById(canvas);
+            var camera = new CameraMovement(canvas);
+            var webgl = new Webgl(canvas, camera, fileReader.vertices[0]);
+            
+            if (!gl) {
+                return;
+            }
+
+            webgl.startAnimation();
+        } else {
+            alert("Unable to read file " + this.path);
+        }
+    };
+
+    request.send();
 }
