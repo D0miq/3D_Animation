@@ -128,6 +128,7 @@ class TextureReader {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
             }
         };
+        
         image.src = url;
     }
 }
@@ -175,6 +176,7 @@ class VertexShader extends Shader {
         this.source = `
             attribute vec4 aVertexPosition;
             attribute vec3 aNormal;
+            attribute vec2 aTextCoord;
         
             uniform mat4 uModelMatrix;
             uniform mat4 uViewMatrix;
@@ -182,11 +184,13 @@ class VertexShader extends Shader {
             
             varying vec3 vNormal;
             varying vec3 vPosition;
+            varying vec2 vTextCoord;
             
             void main() {
                 gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * aVertexPosition;
                 vPosition = vec3(uModelMatrix * aVertexPosition);
                 vNormal = aNormal;
+                vTextCoord = aTextCoord;
             }
         `;        
     }
@@ -198,10 +202,12 @@ class FragmentShader extends Shader {
         this.type = gl.FRAGMENT_SHADER;
         this.source = `
             precision highp float;  
+       
+            uniform sampler2D uTexture;
         
-            uniform vec3 uObjectColor;
             varying vec3 vNormal;
             varying vec3 vPosition;
+            varying vec2 vTextCoord;
         
             void main(void){
                 vec3 lightColor = vec3(1.0, 1.0, 1.0);
@@ -214,9 +220,11 @@ class FragmentShader extends Shader {
                 float diff = max(dot(normal, lightDirection), 0.0);
                 vec3 diffuse = diff * lightColor;
                 
-                vec3 result = (ambient + diffuse) * uObjectColor;
+                vec4 texel = texture2D(uTexture, vTextCoord);
                 
-                gl_FragColor = vec4(result, 1.0);
+                vec3 result = (ambient + diffuse) * texel.rgb;
+                
+                gl_FragColor = vec4(result, texel.a);
             }
         `;
     }
@@ -298,6 +306,13 @@ class CameraMovement {
 }
 
 //---------------------------------- Webgl ----------------------------------
+class Displacement {
+    constructor(texture, newVertex) {
+        this.texture = texture;
+        this.newVertex = newVertex;
+    }
+};
+
 class Vertices {    
     constructor(vertices) {
         this.vertices = vertices;
@@ -332,6 +347,15 @@ class Vertices {
     }
     
     computeTextures(textureCoords, textureIndexes, faces) {
+        if(!textureCoords || !textureIndexes) {
+            this.textureCoords = [];
+            for (var i = 0; i < this.vertices[0].length / 3 * 2; i++) {
+                this.textureCoords[i] = 0;
+            }
+            
+            return;
+        }
+        
         var texturesList = [];
         for(var i = 0; i < this.vertices[0].length; i++) {
             texturesList[i] = [];
@@ -379,13 +403,6 @@ class Vertices {
     }
 }
 
-Vertices.Displacement = class {
-    constructor(texture, newVertex) {
-        this.texture = texture;
-        this.newVertex = newVertex;
-    }
-};
-
 class Webgl {
     constructor(canvas) {
         console.log("Canvas element:", canvas);
@@ -417,10 +434,11 @@ class Webgl {
 
             var positionLocation = gl.getAttribLocation(shaderProgram, "aVertexPosition");
             var normalLocation = gl.getAttribLocation(shaderProgram, "aNormal");
+            var textureCoordLocation = gl.getAttribLocation(shaderProgram, 'aTextCoord');
             var projectionMatrixLocation = gl.getUniformLocation(shaderProgram, 'uProjectionMatrix');
             var viewMatrixLocation = gl.getUniformLocation(shaderProgram, 'uViewMatrix');
             var modelMatrixLocation = gl.getUniformLocation(shaderProgram, 'uModelMatrix');
-            var objectColorLocation = gl.getUniformLocation(shaderProgram, 'uObjectColor');
+            var textureLocation = gl.getUniformLocation(shaderProgram, 'uTexture');
         }
 
         // --------------------- Initialize buffers ---------------------
@@ -436,6 +454,10 @@ class Webgl {
 
             var normalBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+            
+            var textureCoordBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices.textureCoords), gl.STATIC_DRAW);
             
             var projectionMatrix = mat4.create();
             mat4.perspective(projectionMatrix, Math.PI / 4, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 100.0);
@@ -476,9 +498,13 @@ class Webgl {
                 
                 // Tell WebGL which indices to use to index the vertices
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer);
+                
+                gl.enableVertexAttribArray(textureCoordLocation);
+                gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
+                gl.vertexAttribPointer(textureCoordLocation, 2, gl.FLOAT, false, 0, 0);
             }
             
-            gl.uniform3fv(objectColorLocation, [0.9, 0.9, 0.9]);
+            gl.uniform1i(textureLocation, 0);
             
             // --------------------- Transformations ---------------------
             {
@@ -534,9 +560,12 @@ function main(canvas, path, texture){
             
             var fileReader = new FileReader3BA(file);
             fileReader.readFile();
+            
+            var textureReader = new TextureReader(texture);
+            
             var vertices = new Vertices(fileReader.vertices);
             vertices.computeNormals(fileReader.faces);
-            //vertices.computeTextures(fileReader.textureCoordinates, fileReader.textureIndex, fileReader.faces);
+            vertices.computeTextures(fileReader.textureCoordinates, fileReader.textureIndex, fileReader.faces);
             var camera = new CameraMovement(canvas);
 
             webgl.startAnimation(camera, vertices, fileReader.faces, 25);
