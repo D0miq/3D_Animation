@@ -16,12 +16,11 @@ namespace _3DGraphicsCompressionTest
         public void TestAddFrane()
         {
             Compression compression = new Compression();
-            Frame mesh = new Frame(new List<float>() { 0.5f, 0.3f }, new List<Face>() { new Face() }, new List<float>() { 1, 2 }, new List<float>() { 3, 4 });
+            Frame mesh = new Frame(new List<float>() { 0.5f, 0.3f }, new List<Face>() { new Face() }, new List<float>() { 1, 2 });
             compression.AddFrame(mesh);
             CollectionAssert.AreEqual(mesh.Vertices, compression.Frame.Vertices);
             CollectionAssert.AreEqual(mesh.Faces, compression.Frame.Faces);
             CollectionAssert.AreEqual(mesh.TextureCoords, compression.Frame.TextureCoords);
-            CollectionAssert.AreEqual(mesh.Normals, compression.Frame.Normals);
         }
 
         [TestMethod]

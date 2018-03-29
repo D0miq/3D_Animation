@@ -16,7 +16,6 @@ namespace _3DGraphicsCompressionTest
             face.FromString(faceString);
             Assert.IsTrue(new int[] { 1, 4, 7 }.SequenceEqual(face.Vertices));
             Assert.IsTrue(new int[] { 2, 5, 8 }.SequenceEqual(face.Textures));
-            Assert.IsTrue(new int[] { 3, 6, 9 }.SequenceEqual(face.Normals));
         }
 
         [TestMethod]
@@ -27,7 +26,6 @@ namespace _3DGraphicsCompressionTest
             face.FromString(faceString);
             Assert.IsTrue(new int[] { 1, 4, 7 }.SequenceEqual(face.Vertices));
             Assert.IsTrue(new int[] { 0, 0, 0 }.SequenceEqual(face.Textures));
-            Assert.IsTrue(new int[] { 3, 6, 9 }.SequenceEqual(face.Normals));
         }
 
         [TestMethod]
@@ -38,7 +36,6 @@ namespace _3DGraphicsCompressionTest
             face.FromString(faceString);
             Assert.IsTrue(new int[] { 1, 4, 7 }.SequenceEqual(face.Vertices));
             Assert.IsTrue(new int[] { 2, 5, 8 }.SequenceEqual(face.Textures));
-            Assert.IsTrue(new int[] { 0, 0, 0 }.SequenceEqual(face.Normals));
         }
 
         [TestMethod]
@@ -49,7 +46,6 @@ namespace _3DGraphicsCompressionTest
             face.FromString(faceString);
             Assert.IsTrue(new int[] { 0, 0, 0 }.SequenceEqual(face.Vertices));
             Assert.IsTrue(new int[] { 0, 0, 0 }.SequenceEqual(face.Textures));
-            Assert.IsTrue(new int[] { 0, 0, 0 }.SequenceEqual(face.Normals));
         }
 
         [TestMethod]

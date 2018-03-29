@@ -48,7 +48,6 @@
                 {
                     this.writer.Write(face.Vertices[i]);
                     this.writer.Write(face.Textures[i]);
-                    this.writer.Write(face.Normals[i]);
                 }
             }
         }
@@ -62,20 +61,6 @@
         {
             this.writer.Write(textures.Count);
             foreach (float value in textures)
-            {
-                this.writer.Write(value);
-            }
-        }
-
-        /// <summary>
-        /// Writes normals into a 3gbf file.
-        /// </summary>
-        /// <param name="normals">Normals that are going to be written to the file.</param>
-        /// <exception cref="IOException">Error during writing to the file.</exception>
-        internal void WriteNormals(List<float> normals)
-        {
-            this.writer.Write(normals.Count);
-            foreach (float value in normals)
             {
                 this.writer.Write(value);
             }
@@ -104,9 +89,12 @@
         {
             this.writer.Write(controlTrajectories.RowCount);
             this.writer.Write(controlTrajectories.ColumnCount);
-            foreach (float value in controlTrajectories.Enumerate())
+            foreach (Vector<float> row in controlTrajectories.EnumerateRows())
             {
-                this.writer.Write(value);
+                foreach (float value in row)
+                {
+                    this.writer.Write(value);
+                }
             }
         }
 
@@ -119,9 +107,12 @@
         {
             this.writer.Write(eigenMatrix.RowCount);
             this.writer.Write(eigenMatrix.ColumnCount);
-            foreach (float value in eigenMatrix.Enumerate())
+            foreach (Vector<float> row in eigenMatrix.EnumerateRows())
             {
-                this.writer.Write(value);
+                foreach (float value in row)
+                {
+                    this.writer.Write(value);
+                }
             }
         }
 

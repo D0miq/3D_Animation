@@ -89,7 +89,6 @@
                 writer.WriteControlTrajectories(compression.ControlTrajectories);
                 writer.WriteFaces(compression.Frame.Faces);
                 writer.WriteTextures(compression.Frame.TextureCoords);
-                writer.WriteTextures(compression.Frame.Normals);
                 writer.Close();
             } catch (Exception ex)
             {

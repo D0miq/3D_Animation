@@ -33,18 +33,12 @@
         private int[] textures;
 
         /// <summary>
-        /// Normals of a face.
-        /// </summary>
-        private int[] normals;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Face"/> class.
         /// </summary>
         public Face()
         {
             this.vertices = new int[VALUES_COUNT];
             this.textures = new int[VALUES_COUNT];
-            this.normals = new int[VALUES_COUNT];
         }
 
         /// <summary>
@@ -56,11 +50,6 @@
         /// Gets textures of a face.
         /// </summary>
         public int[] Textures => this.textures;
-
-        /// <summary>
-        /// Gets normals of a face.
-        /// </summary>
-        public int[] Normals => this.normals;
 
         /// <summary>
         /// Sets face values from a string representation.
@@ -94,11 +83,6 @@
             if (values.Length >= 2)
             {
                 int.TryParse(values[1], out this.textures[index]);
-            }
-
-            if (values.Length == 3)
-            {
-                int.TryParse(values[2], out this.normals[index]);
             }
         }
     }

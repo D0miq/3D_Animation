@@ -98,7 +98,6 @@
             this.frame.Vertices.AddRange(frame.Vertices);
             this.frame.Faces = frame.Faces;
             this.frame.TextureCoords = frame.TextureCoords;
-            this.frame.Normals = frame.Normals;
             this.framesCount++;
         }
 

@@ -12,7 +12,7 @@
         /// </summary>
         /// <param name="vertices">Vertices of the mesh.</param>
         public Frame(List<float> vertices)
-            : this(vertices, new List<Face>(), new List<float>(), new List<float>())
+            : this(vertices, new List<Face>(), new List<float>())
         {
         }
 
@@ -23,12 +23,11 @@
         /// <param name="faces">Faces of the mesh.</param>
         /// <param name="textureCoords">Texture coordinates that map a texture to faces.</param>
         /// <param name="normals">Normals.</param>
-        public Frame(List<float> vertices, List<Face> faces, List<float> textureCoords, List<float> normals)
+        public Frame(List<float> vertices, List<Face> faces, List<float> textureCoords)
         {
             this.Vertices = vertices;
             this.Faces = faces;
             this.TextureCoords = textureCoords;
-            this.Normals = normals;
         }
 
         /// <summary>
@@ -45,10 +44,5 @@
         /// Gets or sets texture coordinates of a mesh.
         /// </summary>
         public List<float> TextureCoords { get; set; }
-
-        /// <summary>
-        /// Gets or sets normals of a mesh.
-        /// </summary>
-        public List<float> Normals { get; set; }
     }
 }

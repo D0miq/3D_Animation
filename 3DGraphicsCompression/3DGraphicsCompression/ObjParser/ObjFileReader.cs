@@ -61,7 +61,6 @@
             List<float> vertices = new List<float>();
             List<Face> faces = new List<Face>();
             List<float> textureCoords = new List<float>();
-            List<float> normals = new List<float>();
 
             string line;
             while ((line = this.reader.ReadLine()) != null)
@@ -69,10 +68,9 @@
                 this.CheckVertex(line, vertices);
                 this.CheckFace(line, faces);
                 this.CheckTextureCoords(line, textureCoords);
-                this.CheckNormal(line, normals);
             }
 
-            return new Frame(vertices, faces, textureCoords, normals);
+            return new Frame(vertices, faces, textureCoords);
         }
 
         /// <summary>
@@ -153,28 +151,6 @@
 
                 float.TryParse(stringValues[2], NumberStyles.Float, CultureInfo, out textureCoord);
                 textureCoords.Add(textureCoord);
-            }
-        }
-
-        /// <summary>
-        /// Checks if the given line contains a normal and if so, adds it to the list.
-        /// </summary>
-        /// <param name="line">The line of a file.</param>
-        /// <param name="normals">The list of normals.</param>
-        private void CheckNormal(string line, List<float> normals)
-        {
-            if (line.StartsWith("vn "))
-            {
-                string[] stringValues = line.Split(' '); // Values in a read line.
-
-                float.TryParse(stringValues[1], NumberStyles.Float, CultureInfo, out float normalCoord);
-                normals.Add(normalCoord);
-
-                float.TryParse(stringValues[2], NumberStyles.Float, CultureInfo, out normalCoord);
-                normals.Add(normalCoord);
-
-                float.TryParse(stringValues[3], NumberStyles.Float, CultureInfo, out normalCoord);
-                normals.Add(normalCoord);
             }
         }
     }
