@@ -50,13 +50,13 @@ class FileReader3BA {
         this.readFaces = function () {
             var facesLength = new Int32Array(getContent(4))[0];
             console.log("Faces length", facesLength);
-            var allFaces = new Int32Array(getContent(facesLength * 4 * 9));
+            var allFaces = new Int32Array(getContent(facesLength * 4 * 6));
             var j = 0;
             this.faces = [];
             this.textureIndex = [];
-            for(var i = 0; i < allFaces.length; i += 3) {
+            for(var i = 0; i < allFaces.length; i += 2) {
                 this.faces[j] = allFaces[i] - 1;
-                this.textureIndex[j] = allFaces[i + 1];
+                this.textureIndex[j] = allFaces[i + 1] - 1;
                 j++;
             }
         };
@@ -100,17 +100,17 @@ class FileReader3BA {
 
 class TextureReader {
     constructor(url) {
-        this.texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        var texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
 
-        const pixel = new Uint8Array([190, 190, 190, 255]);  // opaque blue
+        var pixel = new Uint8Array([190, 190, 190, 255]);  // opaque blue
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,
                 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
                 pixel);
 
-        const image = new Image();
+        var image = new Image();
         image.onload = function () {
-            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,
                     gl.RGBA, gl.UNSIGNED_BYTE, image);
 
@@ -347,8 +347,9 @@ class Vertices {
     }
     
     computeTextures(textureCoords, textureIndexes, faces) {
-        if(!textureCoords || !textureIndexes) {
-            this.textureCoords = [];
+        this.textureCoords = [];
+        
+        if(!textureCoords || !textureIndexes) {     
             for (var i = 0; i < this.vertices[0].length / 3 * 2; i++) {
                 this.textureCoords[i] = 0;
             }
@@ -382,21 +383,21 @@ class Vertices {
                     texturesList[vertexIndex][texturesList[vertexIndex].length] = new Displacement(textureIndex, newIndex);
                     // nahraď v face a přenes do všech framů animace a přidej textovací souřadnice
                     for(var j = 0; j < this.vertices.length; j++) {
-                        this.vertices[i][this.vertices[i].length] = this.vertices[i][vertexIndex * 3];
-                        this.vertices[i][this.vertices[i].length] = this.vertices[i][vertexIndex * 3 + 1];
-                        this.vertices[i][this.vertices[i].length] = this.vertices[i][vertexIndex * 3 + 2];
-                        this.normals[i][this.normals[i].length] = this.normals[i][vertexIndex * 3];
-                        this.normals[i][this.normals[i].length] = this.normals[i][vertexIndex * 3 + 1];
-                        this.normals[i][this.normals[i].length] = this.normals[i][vertexIndex * 3 + 2];
+                        this.vertices[j][newIndex * 3] = this.vertices[j][vertexIndex * 3];
+                        this.vertices[j][newIndex * 3 + 1] = this.vertices[j][vertexIndex * 3 + 1];
+                        this.vertices[j][newIndex * 3 + 2] = this.vertices[j][vertexIndex * 3 + 2];
+                        this.normals[j][newIndex * 3] = this.normals[j][vertexIndex * 3];
+                        this.normals[j][newIndex * 3 + 1] = this.normals[j][vertexIndex * 3 + 1];
+                        this.normals[j][newIndex * 3 + 2] = this.normals[j][vertexIndex * 3 + 2];
                     }
                     
                     this.textureCoords[newIndex * 2] = textureCoords[textureIndex * 2];
                     this.textureCoords[newIndex * 2 + 1] = textureCoords[textureIndex * 2 + 1];
-                    faces[i] = this.vertices.length;
+                    faces[i] = newIndex;
                 } else {
                     texturesList[vertexIndex][texturesList[vertexIndex].length] = new Displacement(textureIndex, vertexIndex);
-                    this.textureCoords[textureIndex * 2] = textureCoords[textureIndex * 2];
-                    this.textureCoords[textureIndex * 2 + 1] = textureCoords[textureIndex * 2 + 1];
+                    this.textureCoords[vertexIndex * 2] = textureCoords[textureIndex * 2];
+                    this.textureCoords[vertexIndex * 2 + 1] = textureCoords[textureIndex * 2 + 1];
                 }
             }
         }
