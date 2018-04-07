@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.IO;
     using log4net;
+    using MathNet.Numerics.LinearAlgebra;
 
     /// <summary>
     /// An instance of the <see cref="ObjFileReader"/> class represents a reader of a mesh saved in an obj file.
@@ -55,9 +56,9 @@
         /// </summary>
         /// <returns>The list that contains vertices.</returns>
         /// <exception cref="IOException">Unable to read from the file.</exception>
-        public List<float> ReadVertices()
+        public List<Vector<float>> ReadVertices()
         {
-            List<float> vertices = new List<float>();
+            List<Vector<float>> vertices = new List<Vector<float>>();
 
             string line;
             while ((line = this.reader.ReadLine()) != null)
@@ -81,20 +82,17 @@
         /// </summary>
         /// <param name="line">The line of a file.</param>
         /// <param name="vertices">The list of vertices.</param>
-        private void CheckVertex(string line, List<float> vertices)
+        private void CheckVertex(string line, List<Vector<float>> vertices)
         {
             if (line.StartsWith("v "))
             {
                 string[] stringValues = line.Split(' '); // Values in a read line.
 
-                float.TryParse(stringValues[1], NumberStyles.Float, CultureInfo, out float vertexCoord);
-                vertices.Add(vertexCoord);
+                float.TryParse(stringValues[1], NumberStyles.Float, CultureInfo, out float x);
+                float.TryParse(stringValues[2], NumberStyles.Float, CultureInfo, out float y);
+                float.TryParse(stringValues[3], NumberStyles.Float, CultureInfo, out float z);
 
-                float.TryParse(stringValues[2], NumberStyles.Float, CultureInfo, out vertexCoord);
-                vertices.Add(vertexCoord);
-
-                float.TryParse(stringValues[3], NumberStyles.Float, CultureInfo, out vertexCoord);
-                vertices.Add(vertexCoord);
+                vertices.Add(Vector<float>.Build.DenseOfArray(new float[] { x, y, z }));
             }
         }
     }
