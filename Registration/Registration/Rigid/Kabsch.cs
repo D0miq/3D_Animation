@@ -15,7 +15,7 @@
             Matrix<float> sourceMatrix = Matrix<float>.Build.DenseOfColumnVectors(sourceCentroid.NormalizePoints().ToArray());
 
             Svd<float> singularDecomposition = (referMatrix * sourceMatrix.Transpose()).Svd();
-            return (singularDecomposition.U * singularDecomposition.VT.Transpose()).Transpose();
+            return singularDecomposition.U * singularDecomposition.VT;
         }
     }
 }

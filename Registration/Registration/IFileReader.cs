@@ -21,6 +21,8 @@
         /// <exception cref="System.IO.IOException">Unable to read from the file.</exception>
         List<Vector<float>> ReadVertices();
 
+        string ReadFaces();
+
         /// <summary>
         /// Closes the reader.
         /// </summary>

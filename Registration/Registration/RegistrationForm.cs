@@ -7,6 +7,7 @@
     using log4net;
     using MathNet.Numerics.LinearAlgebra;
     using Registration.Rigid;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// An instance of the <see cref="RegistrationForm"/> class creates a window of the application and processes events from controls.
@@ -22,6 +23,10 @@
         /// Gives permission to change a tab of the tabControl.
         /// </summary>
         private bool disallowSelect = true;
+
+        private int iterationCount = -1;
+
+        private float maxDistance = -1;
 
         /// <summary>
         /// The path of the referential file.
@@ -114,6 +119,10 @@
             // Returns user to the first tab.
             this.disallowSelect = false;
             this.tabControl.SelectTab(0);
+
+            // Reset rigid stop condition.
+            this.iterationCount = -1;
+            this.maxDistance = -1;
 
             // Clears selected referential and all source files.
             this.referenceFile = string.Empty;
@@ -221,15 +230,43 @@
              * Checks if every necessary rigid settings have been selected and moves user to the last tab.
              * If something has been set wrong, it shows an error MessageBox.
              */
-            if ((this.bruteForceRadioButton.Checked || this.kdTreeRadioButton.Checked) && this.kabschRadioButton.Checked)
+            if ((this.bruteForceRadioButton.Checked || this.kdTreeRadioButton.Checked)
+                && this.kabschRadioButton.Checked
+                && (this.iterationsRadioButton.Checked || this.distanceRadioButton.Checked)
+                && this.stopConditionText.Text != string.Empty)
             {
-                Log.Info("Everything has been set right, continue to the last tab.");
-                this.disallowSelect = false;
-                this.tabControl.SelectTab(3);
+
+                try
+                {
+                    if (this.iterationsRadioButton.Checked)
+                    {
+                        this.iterationCount = int.Parse(this.stopConditionText.Text);
+                        if (this.iterationCount < 1)
+                        {
+                            throw new Exception();
+                        }
+                    }
+                    else if (this.distanceRadioButton.Checked)
+                    {
+                        this.maxDistance = float.Parse(this.stopConditionText.Text);
+                        if (this.iterationCount < 0)
+                        {
+                            throw new Exception();
+                        }
+                    }
+
+                    Log.Info("Everything has been set right, continue to the last tab.");
+                    this.disallowSelect = false;
+                    this.tabControl.SelectTab(3);
+                } catch (Exception ex)
+                {
+                    Log.Warn("Stop condition has not been set right.");
+                    MessageBox.Show("The given value of stop condition is not legitimate.", "Wrong value", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             else
             {
-                Log.Warn("An important setting has not been set right.");
+                Log.Warn("An important setting has not been set.");
                 MessageBox.Show("Select item from all groups.", "Anything not selected", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -288,6 +325,8 @@
         {
             IFileReader fileReader = new ObjFileReader(this.referenceFile);
             List<Vector<float>> referencePoints = fileReader.ReadVertices();
+            string fileWithoutVertices = fileReader.ReadFaces();
+            fileReader.Close();
 
             if (this.rigidRadioButton.Checked)
             {
@@ -298,17 +337,43 @@
                 {
                     pointMapping = new BruteForceMapping(referencePoints);
                 }
-                else if (this.kdTreeRadioButton.Checked)
+                else
                 {
                     pointMapping = new KdTreeMapping(referencePoints);
                 }
 
-                if (this.kabschRadioButton.Checked)
+                rotationAlgorithm = new Kabsch();
+
+                string[] sourceFiles = new string[this.checkedListBox.CheckedItems.Count];
+                this.checkedListBox.CheckedItems.CopyTo(sourceFiles, 0);
+
+                int finishedCount = 0;
+                Parallel.ForEach(sourceFiles, sourceFile =>
                 {
-                    rotationAlgorithm = new Kabsch();
-                }
+                    IFileReader sourceFileReader = new ObjFileReader(sourceFile);
+                    List<Vector<float>> sourcePoints = sourceFileReader.ReadVertices();
+                    sourceFileReader.Close();
 
+                    Icp icp = new Icp(rotationAlgorithm, pointMapping);
+                    if (this.maxDistance > 0)
+                    {
+                        icp.ComputeTransformation(this.maxDistance, referencePoints, sourcePoints);
+                    }
+                    else if (this.iterationCount > 1)
+                    {
+                        icp.ComputeTransformation(this.iterationCount, referencePoints, sourcePoints);
+                    }
 
+                    FileWriter fileWriter = new FileWriter(this.saveDirectory + sourceFile.Substring(sourceFile.LastIndexOf('\\')));
+                    fileWriter.WriteAll(sourcePoints, fileWithoutVertices);
+                    fileWriter.Close();
+
+                    lock (this)
+                    {
+                        finishedCount++;
+                        this.registrationWorker.ReportProgress((int)((float)finishedCount / sourceFiles.Length * 100));
+                    }
+                });
             }
             else
             {

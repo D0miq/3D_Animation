@@ -16,21 +16,21 @@
                 this.Value += points[i];
             }
 
-            this.Value.Divide(points.Count);
+            this.Value = this.Value.Divide(points.Count);
         }
 
         public Vector<float> Value { get; }
 
         public List<Vector<float>> NormalizePoints()
         {
-            List<Vector<float>> tempPoints = new List<Vector<float>>();
+            Vector<float>[] tempPoints = new Vector<float>[this.points.Count];
 
             for (int i = 0; i < this.points.Count; i++)
             {
                 tempPoints[i] = this.points[i] - this.Value;
             }
 
-            return tempPoints;
+            return new List<Vector<float>>(tempPoints);
         }
     }
 }

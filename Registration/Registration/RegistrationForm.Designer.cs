@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.nextRegistration = new System.Windows.Forms.Button();
@@ -55,6 +56,12 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.iterationsRadioButton = new System.Windows.Forms.RadioButton();
+            this.distanceRadioButton = new System.Windows.Forms.RadioButton();
+            this.stopConditionText = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -64,6 +71,7 @@
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -140,6 +148,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox4);
             this.tabPage2.Controls.Add(this.resetButton1);
             this.tabPage2.Controls.Add(this.nextRigid);
             this.tabPage2.Controls.Add(this.groupBox3);
@@ -353,7 +362,7 @@
             // 
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.statusLabel.Size = new System.Drawing.Size(395, 17);
+            this.statusLabel.Size = new System.Drawing.Size(644, 17);
             this.statusLabel.Spring = true;
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -361,6 +370,59 @@
             // 
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(100, 16);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label1);
+            this.groupBox4.Controls.Add(this.stopConditionText);
+            this.groupBox4.Controls.Add(this.distanceRadioButton);
+            this.groupBox4.Controls.Add(this.iterationsRadioButton);
+            this.groupBox4.Location = new System.Drawing.Point(212, 6);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(200, 143);
+            this.groupBox4.TabIndex = 15;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Stop condition";
+            // 
+            // iterationsRadioButton
+            // 
+            this.iterationsRadioButton.AutoSize = true;
+            this.iterationsRadioButton.Location = new System.Drawing.Point(7, 20);
+            this.iterationsRadioButton.Name = "iterationsRadioButton";
+            this.iterationsRadioButton.Size = new System.Drawing.Size(119, 17);
+            this.iterationsRadioButton.TabIndex = 0;
+            this.iterationsRadioButton.TabStop = true;
+            this.iterationsRadioButton.Text = "Number of iterations";
+            this.toolTip.SetToolTip(this.iterationsRadioButton, "Number of iterations has to be greater than 1.");
+            this.iterationsRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // distanceRadioButton
+            // 
+            this.distanceRadioButton.AutoSize = true;
+            this.distanceRadioButton.Location = new System.Drawing.Point(7, 43);
+            this.distanceRadioButton.Name = "distanceRadioButton";
+            this.distanceRadioButton.Size = new System.Drawing.Size(88, 17);
+            this.distanceRadioButton.TabIndex = 1;
+            this.distanceRadioButton.TabStop = true;
+            this.distanceRadioButton.Text = "Max distance";
+            this.toolTip.SetToolTip(this.distanceRadioButton, "Max distance has to be greater than 0.");
+            this.distanceRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // stopConditionText
+            // 
+            this.stopConditionText.Location = new System.Drawing.Point(49, 117);
+            this.stopConditionText.Name = "stopConditionText";
+            this.stopConditionText.Size = new System.Drawing.Size(145, 20);
+            this.stopConditionText.TabIndex = 2;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 120);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(37, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Value:";
             // 
             // RegistrationForm
             // 
@@ -384,6 +446,8 @@
             this.tabPage4.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -418,6 +482,12 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private System.Windows.Forms.ToolStripProgressBar progressBar;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox stopConditionText;
+        private System.Windows.Forms.RadioButton distanceRadioButton;
+        private System.Windows.Forms.RadioButton iterationsRadioButton;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
 

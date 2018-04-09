@@ -20,7 +20,7 @@
 
         public List<Vector<float>> MapPoints(List<Vector<float>> sourcePoints)
         {
-            List<Vector<float>> mappedPoints = new List<Vector<float>>();
+            Vector<float>[] mappedPoints = new Vector<float>[this.referPoints.Count];
             for (int i = 0; i < sourcePoints.Count; i++)
             {
                 int closestIndex = 0;
@@ -36,7 +36,7 @@
                 mappedPoints[i] = this.referPoints[closestIndex];
             }
 
-            return mappedPoints;
+            return new List<Vector<float>>(mappedPoints);
         }
     }
 
@@ -51,13 +51,13 @@
 
         public List<Vector<float>> MapPoints(List<Vector<float>> sourcePoints)
         {
-            List<Vector<float>> mappedPoints = new List<Vector<float>>();
+            Vector<float>[] mappedPoints = new Vector<float>[sourcePoints.Count];
             for (int i = 0; i < sourcePoints.Count; i++)
             {
                 mappedPoints[i] = this.referTree.FindNearestPoint(sourcePoints[i]);
             }
 
-            return mappedPoints;
+            return new List<Vector<float>>(mappedPoints);
         }
     }
 }

@@ -160,15 +160,22 @@
         /// <returns></returns>
         private Node FromList(List<Vector<float>> list, int depth)
         {
-            int axis = depth % list.Count;
+            if (list.Count == 1)
+            {
+                return new Node(list[0]);
+            }
+
+            int axis = depth % list[0].Count;
             VectorComparer.Index = axis;
             list.Sort(new VectorComparer());
 
             int median = list.Count / 2;
 
-            Node node = new Node(list[median]);
-            node.LeftChild = this.FromList(list.GetRange(0, median), depth + 1);
-            node.RightChild = this.FromList(list.GetRange(median, list.Count - median), depth + 1);
+            Node node = new Node(list[median])
+            {
+                LeftChild = this.FromList(list.GetRange(0, median), depth + 1),
+                RightChild = this.FromList(list.GetRange(median, list.Count - median), depth + 1)
+            };
 
             return node;
         }

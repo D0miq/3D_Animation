@@ -16,7 +16,7 @@
             this.mapping = mapping;
         }
 
-        public void ComputeTrasformation(float maxError, List<Vector<float>> referPoints, List<Vector<float>> sourcePoints)
+        public void ComputeTransformation(float maxError, List<Vector<float>> referPoints, List<Vector<float>> sourcePoints)
         {
             this.Translate(referPoints, sourcePoints);
             List<Vector<float>> mappedReferPoints;

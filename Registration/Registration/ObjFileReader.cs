@@ -69,6 +69,24 @@
             return vertices;
         }
 
+        public string ReadFaces()
+        {
+            string file = string.Empty;
+
+            this.reader.BaseStream.Seek(0, SeekOrigin.Begin);
+
+            string line;
+            while ((line = this.reader.ReadLine()) != null)
+            {
+                if (line.StartsWith("f "))
+                {
+                    file += line + "\n";
+                }
+            }
+
+            return file;
+        }
+
         /// <summary>
         /// Closes the reader.
         /// </summary>
