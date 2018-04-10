@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
     using log4net;
     using MathNet.Numerics.LinearAlgebra;
     using Registration.Rigid;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// An instance of the <see cref="RegistrationForm"/> class creates a window of the application and processes events from controls.
@@ -24,8 +24,14 @@
         /// </summary>
         private bool disallowSelect = true;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private int iterationCount = -1;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private float maxDistance = -1;
 
         /// <summary>

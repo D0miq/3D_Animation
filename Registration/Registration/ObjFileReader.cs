@@ -1,9 +1,9 @@
 ﻿namespace Registration
 {
-    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Text;
     using log4net;
     using MathNet.Numerics.LinearAlgebra;
 
@@ -69,9 +69,14 @@
             return vertices;
         }
 
+        /// <summary>
+        /// Reads faces from an obj file. It goes through the whole file.
+        /// </summary>
+        /// <returns>The string that contains all faces.</returns>
+        /// <exception cref="System.IO.IOException">Unable to read from the file.</exception>
         public string ReadFaces()
         {
-            string file = string.Empty;
+            StringBuilder file = new StringBuilder();
 
             this.reader.BaseStream.Seek(0, SeekOrigin.Begin);
 
@@ -80,11 +85,11 @@
             {
                 if (line.StartsWith("f "))
                 {
-                    file += line + "\n";
+                    file.AppendLine(line);
                 }
             }
 
-            return file;
+            return file.ToString();
         }
 
         /// <summary>

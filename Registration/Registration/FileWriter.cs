@@ -8,7 +8,7 @@
     using System.Globalization;
 
     /// <summary>
-    /// An instance of the <see cref="FileWriter"/> class represents a binary writer that creates a new 3gbf file.
+    /// An instance of the <see cref="FileWriter"/> class represents a writer that creates a new obj file.
     /// </summary>
     internal class FileWriter
     {
@@ -46,18 +46,19 @@
         }
 
         /// <summary>
-        /// Writes faces into a 3gbf file as {vertex, texture, normal}.
+        /// Writes vertices and faces into an obj file.
         /// </summary>
+        /// <param name="vertices">Vertices that are going to be written to the file.</param>
         /// <param name="faces">Faces that are going to be written to the file.</param>
         /// <exception cref="IOException">Error during writing to the file.</exception>
-        internal void WriteAll(List<Vector<float>> vertices, string rest)
+        internal void WriteAll(List<Vector<float>> vertices, string faces)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
                 this.writer.WriteLine("v {0} {1} {2}", vertices[i][0].ToString("N", this.numberFormatInfo), vertices[i][1].ToString("N", this.numberFormatInfo), vertices[i][2].ToString("N", this.numberFormatInfo));
             }
 
-            this.writer.Write(rest);
+            this.writer.Write(faces);
         }
 
         /// <summary>

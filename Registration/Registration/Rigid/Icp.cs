@@ -4,18 +4,39 @@
     using MathNet.Numerics;
     using MathNet.Numerics.LinearAlgebra;
 
+    /// <summary>
+    /// 
+    /// </summary>
     class Icp
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private IRotation rotation;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private IPointMapping mapping;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rotationAlgorithm"></param>
+        /// <param name="mapping"></param>
         public Icp(IRotation rotationAlgorithm, IPointMapping mapping)
         {
             this.rotation = rotationAlgorithm;
             this.mapping = mapping;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maxError"></param>
+        /// <param name="referPoints"></param>
+        /// <param name="sourcePoints"></param>
         public void ComputeTransformation(float maxError, List<Vector<float>> referPoints, List<Vector<float>> sourcePoints)
         {
             this.Translate(referPoints, sourcePoints);
@@ -24,11 +45,7 @@
             do
             {
                 mappedReferPoints = this.mapping.MapPoints(sourcePoints);
-                Matrix<float> rotationMatrix = this.rotation.CalculateRotation(mappedReferPoints, sourcePoints);
-                for (int j = 0; j < sourcePoints.Count; j++)
-                {
-                    sourcePoints[j] = rotationMatrix * sourcePoints[j];
-                }
+                this.rotation.CalculateRotation(mappedReferPoints, sourcePoints);
             } while (!this.CheckDistance(maxError, mappedReferPoints, sourcePoints));
         }
 
@@ -45,14 +62,17 @@
             for (int i = 0; i < iterationCount; i++)
             {
                 List<Vector<float>> mappedReferPoints = this.mapping.MapPoints(sourcePoints);
-                Matrix<float> rotationMatrix = this.rotation.CalculateRotation(mappedReferPoints, sourcePoints);
-                for (int j = 0; j < sourcePoints.Count; j++)
-                {
-                    sourcePoints[j] = rotationMatrix * sourcePoints[j];
-                }
+                this.rotation.CalculateRotation(mappedReferPoints, sourcePoints);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maxError"></param>
+        /// <param name="referPoints"></param>
+        /// <param name="sourcePoints"></param>
+        /// <returns></returns>
         private bool CheckDistance(float maxError, List<Vector<float>> referPoints, List<Vector<float>> sourcePoints)
         {
             for (int i = 0; i < referPoints.Count; i++)

@@ -3,10 +3,20 @@
     using System.Collections.Generic;
     using MathNet.Numerics.LinearAlgebra;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class Centroid
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private List<Vector<float>> points;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="points"></param>
         public Centroid(List<Vector<float>> points)
         {
             this.Value = Vector<float>.Build.Dense(points[0].Count);
@@ -19,9 +29,16 @@
             this.Value = this.Value.Divide(points.Count);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Vector<float> Value { get; }
 
-        public List<Vector<float>> NormalizePoints()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<Vector<float>> ToOrigin()
         {
             Vector<float>[] tempPoints = new Vector<float>[this.points.Count];
 

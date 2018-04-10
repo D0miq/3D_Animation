@@ -15,12 +15,17 @@
         string Path { get; }
 
         /// <summary>
-        /// Reads vertices from an obj file. It reads the whole file.
+        /// Reads vertices from an obj file. It goes through the whole file.
         /// </summary>
         /// <returns>The list that contains vertices.</returns>
         /// <exception cref="System.IO.IOException">Unable to read from the file.</exception>
         List<Vector<float>> ReadVertices();
 
+        /// <summary>
+        /// Reads faces from an obj file. It goes through the whole file.
+        /// </summary>
+        /// <returns>The string that contains all faces.</returns>
+        /// <exception cref="System.IO.IOException">Unable to read from the file.</exception>
         string ReadFaces();
 
         /// <summary>

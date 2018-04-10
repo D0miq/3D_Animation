@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using MathNet.Numerics;
     using MathNet.Numerics.LinearAlgebra;
-    using System.Collections;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class KdTree
     {
         /// <summary>
@@ -13,22 +15,47 @@
         /// </summary>
         private class Node
         {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
             public Node(Vector<float> value)
             {
                 this.Value = value;
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
             public Vector<float> Value { get; }
 
+            /// <summary>
+            /// 
+            /// </summary>
             public Node LeftChild { get; set; }
 
+            /// <summary>
+            /// 
+            /// </summary>
             public Node RightChild { get; set; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private class VectorComparer : IComparer<Vector<float>>
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public static int Index = 0;
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <returns></returns>
             public int Compare(Vector<float> x, Vector<float> y)
             {
                 if (x[Index] < y[Index])

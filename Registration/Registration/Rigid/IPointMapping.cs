@@ -4,20 +4,43 @@
     using MathNet.Numerics;
     using MathNet.Numerics.LinearAlgebra;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IPointMapping
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourcePoints"></param>
+        /// <returns></returns>
         List<Vector<float>> MapPoints(List<Vector<float>> sourcePoints);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class BruteForceMapping : IPointMapping
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private List<Vector<float>> referPoints;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="referPoints"></param>
         public BruteForceMapping(List<Vector<float>> referPoints)
         {
             this.referPoints = referPoints;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourcePoints"></param>
+        /// <returns></returns>
         public List<Vector<float>> MapPoints(List<Vector<float>> sourcePoints)
         {
             Vector<float>[] mappedPoints = new Vector<float>[this.referPoints.Count];
@@ -40,15 +63,30 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class KdTreeMapping : IPointMapping
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private KdTree referTree;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="referPoints"></param>
         public KdTreeMapping(List<Vector<float>> referPoints)
         {
             this.referTree = new KdTree(referPoints);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourcePoints"></param>
+        /// <returns></returns>
         public List<Vector<float>> MapPoints(List<Vector<float>> sourcePoints)
         {
             Vector<float>[] mappedPoints = new Vector<float>[sourcePoints.Count];
