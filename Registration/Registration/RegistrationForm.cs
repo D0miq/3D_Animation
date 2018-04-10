@@ -249,7 +249,7 @@
                     else if (this.distanceRadioButton.Checked)
                     {
                         this.maxDistance = float.Parse(this.stopConditionText.Text);
-                        if (this.iterationCount < 0)
+                        if (this.maxDistance <= 0)
                         {
                             throw new Exception();
                         }
@@ -321,18 +321,26 @@
             this.disallowSelect = true;
         }
 
+        /// <summary>
+        /// Starts asynchronous registration.
+        /// </summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="e">Arguments of the event.</param>
         private void RegistrationWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            // Reads referential file, its vertices and faces.
             IFileReader fileReader = new ObjFileReader(this.referenceFile);
             List<Vector<float>> referencePoints = fileReader.ReadVertices();
             string fileWithoutVertices = fileReader.ReadFaces();
             fileReader.Close();
 
+            // Starts rigid or nonrigid registration, depends on the checked radio button.
             if (this.rigidRadioButton.Checked)
             {
                 IRotation rotationAlgorithm;
                 IPointMapping pointMapping;
 
+                // Selects mapping algorithm. 
                 if (this.bruteForceRadioButton.Checked)
                 {
                     pointMapping = new BruteForceMapping(referencePoints);
@@ -342,32 +350,41 @@
                     pointMapping = new KdTreeMapping(referencePoints);
                 }
 
+
                 rotationAlgorithm = new Kabsch();
 
+                // Copies paths of source files into an array.
                 string[] sourceFiles = new string[this.checkedListBox.CheckedItems.Count];
                 this.checkedListBox.CheckedItems.CopyTo(sourceFiles, 0);
 
                 int finishedCount = 0;
+                // Processes each source file in a new thread.
                 Parallel.ForEach(sourceFiles, sourceFile =>
                 {
+                    // Reads vertices from the source file.
                     IFileReader sourceFileReader = new ObjFileReader(sourceFile);
                     List<Vector<float>> sourcePoints = sourceFileReader.ReadVertices();
                     sourceFileReader.Close();
 
+                    // Creates iterative closest point algorithm with rotation and mapping algorithms.
                     Icp icp = new Icp(rotationAlgorithm, pointMapping);
+
+                    // Transforms source points with the selected stop condition.
                     if (this.maxDistance > 0)
                     {
                         icp.ComputeTransformation(this.maxDistance, referencePoints, sourcePoints);
                     }
-                    else if (this.iterationCount > 1)
+                    else if (this.iterationCount > 0)
                     {
                         icp.ComputeTransformation(this.iterationCount, referencePoints, sourcePoints);
                     }
 
+                    // Writes registered points to a new file on the given location.
                     FileWriter fileWriter = new FileWriter(this.saveDirectory + sourceFile.Substring(sourceFile.LastIndexOf('\\')));
                     fileWriter.WriteAll(sourcePoints, fileWithoutVertices);
                     fileWriter.Close();
 
+                    // Reports that a source file has been registered.
                     lock (this)
                     {
                         finishedCount++;
@@ -381,12 +398,22 @@
             }
         }
 
+        /// <summary>
+        /// Reports progress of a registration.
+        /// </summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="e">Arguments of the event.</param>
         private void RegistrationWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             Log.Debug("Progress percentage: " + e.ProgressPercentage);
             this.progressBar.Value = e.ProgressPercentage;
         }
 
+        /// <summary>
+        /// Clears resources after registration.
+        /// </summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="e">Arguments of the event.</param>
         private void RegistrationWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Log.Info("Registration of all meshes is finished.");
