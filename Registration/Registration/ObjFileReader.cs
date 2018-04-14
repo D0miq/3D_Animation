@@ -60,6 +60,8 @@
         {
             List<Vector<float>> vertices = new List<Vector<float>>();
 
+            this.reader.BaseStream.Seek(0, SeekOrigin.Begin);
+
             string line;
             while ((line = this.reader.ReadLine()) != null)
             {

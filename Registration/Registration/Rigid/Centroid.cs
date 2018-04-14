@@ -11,16 +11,11 @@
         /// <summary>
         /// 
         /// </summary>
-        private List<Vector<float>> points;
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="points"></param>
         public Centroid(List<Vector<float>> points)
         {
             this.Value = Vector<float>.Build.Dense(points[0].Count);
-            this.points = points;
+
             for (int i = 0; i < points.Count; i++)
             {
                 this.Value += points[i];
@@ -38,13 +33,13 @@
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<Vector<float>> ToOrigin()
+        public List<Vector<float>> TranslatePointsToOrigin(List<Vector<float>> points)
         {
-            Vector<float>[] tempPoints = new Vector<float>[this.points.Count];
+            Vector<float>[] tempPoints = new Vector<float>[points.Count];
 
-            for (int i = 0; i < this.points.Count; i++)
+            for (int i = 0; i < points.Count; i++)
             {
-                tempPoints[i] = this.points[i] - this.Value;
+                tempPoints[i] = points[i] - this.Value;
             }
 
             return new List<Vector<float>>(tempPoints);

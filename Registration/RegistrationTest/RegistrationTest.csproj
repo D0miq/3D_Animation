@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rigid\KdTreeTest.cs" />
-    <Compile Include="Rigid\Vector3Test.cs" />
+    <Compile Include="Rigid\MappingTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -34,6 +34,8 @@
         /// </summary>
         private float maxDistance = -1;
 
+        private float maxMapping = -1;
+
         /// <summary>
         /// The path of the referential file.
         /// </summary>
@@ -239,11 +241,13 @@
             if ((this.bruteForceRadioButton.Checked || this.kdTreeRadioButton.Checked)
                 && this.kabschRadioButton.Checked
                 && (this.iterationsRadioButton.Checked || this.distanceRadioButton.Checked)
-                && this.stopConditionText.Text != string.Empty)
+                && this.stopConditionText.Text != string.Empty
+                && this.maxMappingText.Text != string.Empty)
             {
 
                 try
                 {
+
                     if (this.iterationsRadioButton.Checked)
                     {
                         this.iterationCount = int.Parse(this.stopConditionText.Text);
@@ -255,10 +259,16 @@
                     else if (this.distanceRadioButton.Checked)
                     {
                         this.maxDistance = float.Parse(this.stopConditionText.Text);
-                        if (this.maxDistance <= 0)
+                        if (this.maxDistance < 0)
                         {
                             throw new Exception();
                         }
+                    }
+
+                    this.maxMapping = float.Parse(this.maxMappingText.Text);
+                    if (this.maxMapping <= 0)
+                    {
+                        throw new Exception();
                     }
 
                     Log.Info("Everything has been set right, continue to the last tab.");
@@ -266,8 +276,8 @@
                     this.tabControl.SelectTab(3);
                 } catch (Exception ex)
                 {
-                    Log.Warn("Stop condition has not been set right.");
-                    MessageBox.Show("The given value of stop condition is not legitimate.", "Wrong value", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Log.Warn("Text input values has not been set right.");
+                    MessageBox.Show("The given value of stop condition or max mapping distance are not legitimate.", "Wrong value", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -349,11 +359,11 @@
                 // Selects mapping algorithm. 
                 if (this.bruteForceRadioButton.Checked)
                 {
-                    pointMapping = new BruteForceMapping(referencePoints);
+                    pointMapping = new BruteForceMapping(referencePoints, this.maxMapping);
                 }
                 else
                 {
-                    pointMapping = new KdTreeMapping(referencePoints);
+                    pointMapping = new KdTreeMapping(referencePoints, this.maxMapping);
                 }
 
 
@@ -364,8 +374,9 @@
                 this.checkedListBox.CheckedItems.CopyTo(sourceFiles, 0);
 
                 int finishedCount = 0;
+
                 // Processes each source file in a new thread.
-                Parallel.ForEach(sourceFiles, sourceFile =>
+                foreach (string sourceFile in sourceFiles)
                 {
                     // Reads vertices from the source file.
                     IFileReader sourceFileReader = new ObjFileReader(sourceFile);
@@ -376,7 +387,7 @@
                     Icp icp = new Icp(rotationAlgorithm, pointMapping);
 
                     // Transforms source points with the selected stop condition.
-                    if (this.maxDistance > 0)
+                    if (this.maxDistance >= 0)
                     {
                         icp.ComputeTransformation(this.maxDistance, referencePoints, sourcePoints);
                     }
@@ -391,12 +402,9 @@
                     fileWriter.Close();
 
                     // Reports that a source file has been registered.
-                    lock (this)
-                    {
-                        finishedCount++;
-                        this.registrationWorker.ReportProgress((int)((float)finishedCount / sourceFiles.Length * 100));
-                    }
-                });
+                    finishedCount++;
+                    this.registrationWorker.ReportProgress((int)((float)finishedCount / sourceFiles.Length * 100));
+                }
             }
             else
             {
@@ -424,8 +432,8 @@
         {
             Log.Info("Registration of all meshes is finished.");
             this.progressBar.Value = 0;
-            this.statusLabel.Text = "Registration of all meshes is finished.";
             this.tabControl.Enabled = true;
+            MessageBox.Show("Registration of all meshes is finished.", "Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
