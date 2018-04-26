@@ -4,7 +4,6 @@
     using log4net;
     using MathNet.Numerics;
     using MathNet.Numerics.LinearAlgebra;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// The interface <see cref="IPointMapping"/> represents 
@@ -20,6 +19,8 @@
         /// <param name="sourcePoints">Source points.</param>
         /// <returns>Closest referential points to the given source points.</returns>
         List<Vector<float>> MapPoints(List<Vector<float>> sourcePoints, out List<Vector<float>> mappedSourcePoints);
+
+        Vector<float> MapSinglePoint(Vector<float> point);
     }
 
     /// <summary>
@@ -84,6 +85,27 @@
 
             return mappedPoints;
         }
+
+        public Vector<float> MapSinglePoint(Vector<float> point)
+        {
+            int closestIndex = 0;
+
+            for (int j = 0; j < this.referPoints.Count; j++)
+            {
+                if (Distance.Euclidean(this.referPoints[j], point) < Distance.Euclidean(this.referPoints[closestIndex], point))
+                {
+                    closestIndex = j;
+                }
+            }
+
+            if (Distance.Euclidean(this.referPoints[closestIndex], point) < this.maxDistance)
+            {
+                return this.referPoints[closestIndex];
+            } else
+            {
+                return null;
+            }
+        }
     }
 
     /// <summary>
@@ -122,6 +144,11 @@
             Log.Debug("Depth of the referential kd-tree " + this.referTree.MaxDepth);
         }
 
+        public KdTreeMapping(List<Vector<float>> referPoints)
+            : this(referPoints, float.MaxValue)
+        {
+        }
+
         /// <summary>
         /// Finds correspoding pairs of the closest points for the given list.
         /// Function uses kd-tree structure and finds the nearest neighbor from it.
@@ -148,6 +175,21 @@
             }
 
             return mappedPoints;
+        }
+
+        public Vector<float> MapSinglePoint(Vector<float> point)
+        {
+            Vector<float> tempPoint = this.referTree.FindNearestPoint(point);
+
+            Log.Debug("Number of checked nodes = " + this.referTree.CheckedNodeCount);
+
+            if (Distance.Euclidean(tempPoint, point) < this.maxDistance)
+            {
+                return tempPoint;
+            } else
+            {
+                return null;
+            }
         }
     }
 }

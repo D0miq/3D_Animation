@@ -8,6 +8,8 @@
     using log4net;
     using MathNet.Numerics.LinearAlgebra;
     using Registration.Rigid;
+    using MathNet.Numerics;
+    using Registration.Nonrigid;
 
     /// <summary>
     /// An instance of the <see cref="RegistrationForm"/> class creates a window of the application and processes events from controls.
@@ -337,6 +339,59 @@
             this.disallowSelect = true;
         }
 
+        private List<Vector<float>> RigidRegistration(string sourceFile, List<Vector<float>> referencePoints, IRotation rotation, IPointMapping mapping)
+        {
+            // Reads vertices from the source file.
+            IFileReader sourceFileReader = new ObjFileReader(sourceFile);
+            List<Vector<float>> sourcePoints = sourceFileReader.ReadVertices();
+            sourceFileReader.Close();
+
+            // Creates iterative closest point algorithm with rotation and mapping algorithms.
+            Icp icp = new Icp(rotation, mapping);
+
+            // Transforms source points with the selected stop condition.
+            if (this.maxDistance >= 0)
+            {
+                icp.ComputeTransformation(this.maxDistance, referencePoints, sourcePoints);
+            }
+            else if (this.iterationCount > 0)
+            {
+                icp.ComputeTransformation(this.iterationCount, referencePoints, sourcePoints);
+            }
+
+            return sourcePoints;
+        }
+
+        private void NonrigidRegistration(List<Vector<float>> sourcePoints, List<Vector<float>> referencePoints)
+        {
+            IPointMapping mapping = new KdTreeMapping(referencePoints);
+            List<Vector<float>> mappedReferencePoints = mapping.MapPoints(ControlPointsGenerator.RandomPoints(sourcePoints), out List<Vector<float>> controlPoints);
+
+            mapping = new KdTreeMapping(sourcePoints);
+
+            List<Vector<float>> correctionVectors = new List<Vector<float>>();
+
+            // Prochází kontrolní body na referenční meshi
+            for (int referIndex = 0; referIndex < mappedReferencePoints.Count; referIndex++)
+            {
+                Vector<float> averageVector = Vector<float>.Build.DenseOfArray(new float[] { 0, 0, 0 });
+                int areaPointsCount = 0;
+                // Hledá body uvnitř oblasti kolem kontrolního bodu
+                for (int areaIndex = 0; areaIndex < referencePoints.Count; areaIndex++)
+                {
+                    if (Distance.Euclidean(mappedReferencePoints[referIndex], referencePoints[areaIndex]) < ControlPointsGenerator.AREA_SIZE)
+                    {
+                        Vector<float> mappedPoint = mapping.MapSinglePoint(referencePoints[areaIndex]);
+                        averageVector = averageVector + mappedPoint - referencePoints[areaIndex];
+                        areaPointsCount++;
+                    }
+                }
+
+                averageVector.Divide(areaPointsCount == 0 ? 1 : areaPointsCount);
+                correctionVectors.Add(averageVector);
+            }
+        }
+
         /// <summary>
         /// Starts asynchronous registration.
         /// </summary>
@@ -351,64 +406,42 @@
             fileReader.Close();
 
             // Starts rigid or nonrigid registration, depends on the checked radio button.
-            if (this.rigidRadioButton.Checked)
+            IRotation rotationAlgorithm;
+            IPointMapping pointMapping;
+
+            // Selects mapping algorithm. 
+            if (this.bruteForceRadioButton.Checked)
             {
-                IRotation rotationAlgorithm;
-                IPointMapping pointMapping;
-
-                // Selects mapping algorithm. 
-                if (this.bruteForceRadioButton.Checked)
-                {
-                    pointMapping = new BruteForceMapping(referencePoints, this.maxMapping);
-                }
-                else
-                {
-                    pointMapping = new KdTreeMapping(referencePoints, this.maxMapping);
-                }
-
-
-                rotationAlgorithm = new Kabsch();
-
-                // Copies paths of source files into an array.
-                string[] sourceFiles = new string[this.checkedListBox.CheckedItems.Count];
-                this.checkedListBox.CheckedItems.CopyTo(sourceFiles, 0);
-
-                int finishedCount = 0;
-
-                // Processes each source file in a new thread.
-                foreach (string sourceFile in sourceFiles)
-                {
-                    // Reads vertices from the source file.
-                    IFileReader sourceFileReader = new ObjFileReader(sourceFile);
-                    List<Vector<float>> sourcePoints = sourceFileReader.ReadVertices();
-                    sourceFileReader.Close();
-
-                    // Creates iterative closest point algorithm with rotation and mapping algorithms.
-                    Icp icp = new Icp(rotationAlgorithm, pointMapping);
-
-                    // Transforms source points with the selected stop condition.
-                    if (this.maxDistance >= 0)
-                    {
-                        icp.ComputeTransformation(this.maxDistance, referencePoints, sourcePoints);
-                    }
-                    else if (this.iterationCount > 0)
-                    {
-                        icp.ComputeTransformation(this.iterationCount, referencePoints, sourcePoints);
-                    }
-
-                    // Writes registered points to a new file on the given location.
-                    FileWriter fileWriter = new FileWriter(this.saveDirectory + sourceFile.Substring(sourceFile.LastIndexOf('\\')));
-                    fileWriter.WriteAll(sourcePoints, fileWithoutVertices);
-                    fileWriter.Close();
-
-                    // Reports that a source file has been registered.
-                    finishedCount++;
-                    this.registrationWorker.ReportProgress((int)((float)finishedCount / sourceFiles.Length * 100));
-                }
+                pointMapping = new BruteForceMapping(referencePoints, this.maxMapping);
             }
             else
             {
-                this.statusLabel.Text = "Nonrigid registration has not been implemented yet.";
+                pointMapping = new KdTreeMapping(referencePoints, this.maxMapping);
+            }
+
+
+            rotationAlgorithm = new Kabsch();
+
+            // Copies paths of source files into an array.
+            string[] sourceFiles = new string[this.checkedListBox.CheckedItems.Count];
+            this.checkedListBox.CheckedItems.CopyTo(sourceFiles, 0);
+
+            int finishedCount = 0;
+
+            // Processes each source file in a new thread.
+            foreach (string sourceFile in sourceFiles)
+            {
+                List<Vector<float>> sourcePoints = this.RigidRegistration(sourceFile, referencePoints, rotationAlgorithm, pointMapping);
+                this.NonrigidRegistration(sourcePoints, referencePoints);
+
+                // Writes registered points to a new file on the given location.
+                FileWriter fileWriter = new FileWriter(this.saveDirectory + sourceFile.Substring(sourceFile.LastIndexOf('\\')));
+                fileWriter.WriteAll(sourcePoints, fileWithoutVertices);
+                fileWriter.Close();
+
+                // Reports that a source file has been registered.
+                finishedCount++;
+                this.registrationWorker.ReportProgress((int)((float)finishedCount / sourceFiles.Length * 100));
             }
         }
 

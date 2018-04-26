@@ -54,6 +54,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileWriter.cs" />
+    <Compile Include="Nonrigid\ControlPointsGenerator.cs" />
+    <Compile Include="Nonrigid\NonrigidUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Nonrigid\NonrigidUserControl.Designer.cs">
+      <DependentUpon>NonrigidUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Nonrigid\Rbf.cs" />
     <Compile Include="RegistrationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,12 +72,21 @@
     <Compile Include="ObjFileReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rigid\RigidUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Rigid\RigidUserControl.Designer.cs">
+      <DependentUpon>RigidUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rigid\Centroid.cs" />
     <Compile Include="Rigid\Icp.cs" />
     <Compile Include="Rigid\IRotation.cs" />
     <Compile Include="Rigid\Kabsch.cs" />
     <Compile Include="Rigid\KdTree.cs" />
     <Compile Include="Rigid\IPointMapping.cs" />
+    <EmbeddedResource Include="Nonrigid\NonrigidUserControl.resx">
+      <DependentUpon>NonrigidUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RegistrationForm.resx">
       <DependentUpon>RegistrationForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -82,6 +99,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Rigid\RigidUserControl.resx">
+      <DependentUpon>RigidUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="log4net.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -101,8 +121,6 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Nonrigid\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
