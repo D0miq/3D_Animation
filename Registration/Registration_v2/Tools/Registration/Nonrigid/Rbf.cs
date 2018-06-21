@@ -17,7 +17,7 @@
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// The basis function r^3 which can be used during interpolation.
+        /// The basis function r^3 which is used during interpolation.
         /// </summary>
         private readonly Func<float, float> basisFunction = value => value * value * value;
 

@@ -118,21 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="elementHost.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1080, 605</value>
-  </data>
-  <data name="splitContainer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1080, 605</value>
-  </data>
-  <data name="stripContainer.ContentPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1080, 605</value>
-  </data>
-  <data name="fileMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 20</value>
-  </data>
-  <data name="fileMenuItem.Text" xml:space="preserve">
-    <value>Soubor</value>
-  </data>
   <data name="fileImportMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>153, 22</value>
   </data>
@@ -143,37 +128,25 @@
     <value>153, 22</value>
   </data>
   <data name="fileSaveMenuItem.Text" xml:space="preserve">
-    <value>Uložit modely</value>
+    <value>Uložit model</value>
+  </data>
+  <data name="fileMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 20</value>
+  </data>
+  <data name="fileMenuItem.Text" xml:space="preserve">
+    <value>Soubor</value>
+  </data>
+  <data name="viewModelsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>131, 22</value>
+  </data>
+  <data name="viewModelsMenuItem.Text" xml:space="preserve">
+    <value>3D modely</value>
   </data>
   <data name="viewMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>62, 20</value>
   </data>
   <data name="viewMenuItem.Text" xml:space="preserve">
     <value>Zobrazit</value>
-  </data>
-  <data name="viewModelsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
-  </data>
-  <data name="viewModelsMenuItem.Text" xml:space="preserve">
-    <value>3D modely</value>
-  </data>
-  <data name="viewPropertiesMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
-  </data>
-  <data name="viewPropertiesMenuItem.Text" xml:space="preserve">
-    <value>Vlastnosti</value>
-  </data>
-  <data name="toolsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>63, 20</value>
-  </data>
-  <data name="toolsMenuItem.Text" xml:space="preserve">
-    <value>Nástroje</value>
-  </data>
-  <data name="toolsRegistrationMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 22</value>
-  </data>
-  <data name="toolsRegistrationMenuItem.Text" xml:space="preserve">
-    <value>Registrace</value>
   </data>
   <data name="toolsRegistrationRigidMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>123, 22</value>
@@ -187,12 +160,24 @@
   <data name="toolsRegistrationNonrigidMenuItem.Text" xml:space="preserve">
     <value>Nerigidní</value>
   </data>
+  <data name="toolsRegistrationMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>128, 22</value>
+  </data>
+  <data name="toolsRegistrationMenuItem.Text" xml:space="preserve">
+    <value>Registrace</value>
+  </data>
+  <data name="toolsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 20</value>
+  </data>
+  <data name="toolsMenuItem.Text" xml:space="preserve">
+    <value>Nástroje</value>
+  </data>
   <data name="openFileDialog.Filter" xml:space="preserve">
     <value>obj soubory (*.obj)|*.obj</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>Inherit</value>
+    <value>NoControl</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>3D registrace</value>

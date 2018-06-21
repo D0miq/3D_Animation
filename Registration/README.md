@@ -1,5 +1,5 @@
 # Registration_v2
-Utilita sloužící k registrování dvou 3D ploch. 
+Utilita sloužící k registrování dvou 3D ploch. V aplikaci je nutné nejprve importovat modely, s kterými lze následně pracovat, v menu pomocí Soubor->Nahrát modely. Panel s nahranými modely lze zobrazit pomocí položky v menu Zobrazit->3D modely. Registrace se provádí v záložkách Nástroje. Při zvolení rigidní nebo nerigidní registrace se objeví formulář pro zadání parametrů algoritmů a zvolení zdrojového a cílového modelu. Doporučuji 200 iterací pro obě registrace. Po dokončení registrace lze modely uložit pomocí Soubor->Uložit model nebo kliknutím pravého tlačítka myši v seznamu modelů. Ukládá se model, který je vybrán v panelu se seznamem modelů. Zaškrtávací políčko u modelů v seznamu slouží pouze k zobrazí 3D objektu ve vieweru, nemá nic společného s ukládáním.
 
 # RegistrationTest
 UnitTesty pro registrační utilitu.
