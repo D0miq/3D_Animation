@@ -93,7 +93,7 @@
             statusBar.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             statusBar.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
             statusBar.Name = "statusBar";
-            statusBar.Size = new System.Drawing.Size(547, 19);
+            statusBar.Size = new System.Drawing.Size(516, 19);
             statusBar.Spring = true;
             statusBar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
