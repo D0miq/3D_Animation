@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Registration", "Registration\Registration.csproj", "{779B8848-665A-4780-9AFA-2D5EA7C04BA7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistrationTest", "RegistrationTest\RegistrationTest.csproj", "{428F2DDF-98F4-40E2-A610-639EAA762CFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Registration_v2", "Registration_v2\Registration_v2.csproj", "{D6768E77-A13D-4281-A10D-102210EA7836}"
@@ -15,10 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{779B8848-665A-4780-9AFA-2D5EA7C04BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{779B8848-665A-4780-9AFA-2D5EA7C04BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{779B8848-665A-4780-9AFA-2D5EA7C04BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{779B8848-665A-4780-9AFA-2D5EA7C04BA7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{428F2DDF-98F4-40E2-A610-639EAA762CFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{428F2DDF-98F4-40E2-A610-639EAA762CFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{428F2DDF-98F4-40E2-A610-639EAA762CFE}.Release|Any CPU.ActiveCfg = Release|Any CPU

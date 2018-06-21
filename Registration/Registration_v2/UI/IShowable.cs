@@ -1,13 +1,13 @@
 ﻿namespace Registration_v2.UI
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
+    /// <summary>
+    /// The <see cref="IShowable"/> interface says which panel can be shown.
+    /// </summary>
     public interface IShowable
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether a panel is shown.
+        /// </summary>
         bool IsShown { get; set; }
     }
 }

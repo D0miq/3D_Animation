@@ -5,10 +5,13 @@
     using Registration_v2.Data;
     using Registration_v2.UI;
 
+    /// <summary>
+    /// Entry point of the application.
+    /// </summary>
     public static class Program
     {
         /// <summary>
-        /// Hlavní vstupní bod aplikace.
+        /// Entry point of the application.
         /// </summary>
         [STAThread]
         public static void Main()

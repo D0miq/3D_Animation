@@ -43,10 +43,10 @@
             this.toolsRegistrationRigidMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsRegistrationNonrigidMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.elementHost = new System.Windows.Forms.Integration.ElementHost();
             this.helixViewer = new Registration_v2.UI.HelixViewer();
             this.stripContainer.ContentPanel.SuspendLayout();
@@ -191,6 +191,13 @@
             // 
             this.statusProgressBar.Name = "statusProgressBar";
             resources.ApplyResources(this.statusProgressBar, "statusProgressBar");
+            this.statusProgressBar.Step = 1;
+            this.statusProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.DefaultExt = "obj";
+            resources.ApplyResources(this.saveFileDialog, "saveFileDialog");
             // 
             // elementHost
             // 
@@ -242,12 +249,12 @@
         private System.Windows.Forms.Integration.ElementHost elementHost;
         private HelixViewer helixViewer;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.ToolStripMenuItem viewModelsMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private System.Windows.Forms.ToolStripProgressBar statusProgressBar;
         private System.Windows.Forms.SplitContainer viewSplitContainer;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
 

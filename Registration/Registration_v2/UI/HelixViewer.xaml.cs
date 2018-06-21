@@ -1,12 +1,11 @@
 ﻿namespace Registration_v2.UI
 {
-    using System;
+    using System.Collections.Generic;
     using System.Windows.Controls;
     using System.Windows.Media.Media3D;
     using HelixToolkit.Wpf;
     using log4net;
     using Registration_v2.IO;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Interakční logika pro HelixViewer.xaml
@@ -38,7 +37,7 @@
         /// <summary>
         /// Adds a new point cloud to the <see cref="helixViewport"/>.
         /// </summary>
-        /// <param name="pointsVisual">Point cloud that will be added.</param>
+        /// <param name="model">Point cloud that will be added.</param>
         public void AddModel(string model)
         {
             Log.Info("Adding a model to a viewer");
