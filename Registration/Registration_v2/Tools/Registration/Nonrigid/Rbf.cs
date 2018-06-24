@@ -16,7 +16,7 @@
         /// </summary>
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const int X = 92;
+        private const int X = 1800;
 
         private float c;
 
@@ -89,18 +89,23 @@
         private float AverageDistance(List<Vector<float>> controlPoints)
         {
             Log.Info("Computing average distance between control points.");
-            float averageDistance = 0f;
-            int count = 0;
+            float averageShortestDistance = 0f;
             for (int i = 0; i < controlPoints.Count; i++)
             {
-                for (int j = i; j < controlPoints.Count; j++)
+                float shortestDistance = float.MaxValue;
+                for (int j = 0; j < controlPoints.Count; j++)
                 {
-                    averageDistance += (float)Distance.Euclidean(controlPoints[i], controlPoints[j]);
-                    count++;
+                    float tempDistance = (float)Distance.Euclidean(controlPoints[i], controlPoints[j]);
+                    if (tempDistance < shortestDistance && i != j)
+                    {
+                        shortestDistance = tempDistance;
+                    }
                 }
+
+                averageShortestDistance += shortestDistance;
             }
 
-            return averageDistance / count;
+            return averageShortestDistance / controlPoints.Count;
         }
 
         /// <summary>
