@@ -50,7 +50,8 @@
             List<Vector<float>> controlPoints = new List<Vector<float>>();
 
             // Set number of points which are selected. It selects 10% of total points.
-            int controlPointsCount = this.vertexBuffer.Count > 0 && this.vertexBuffer.Count < 10 ? 1 : this.vertexBuffer.Count / 10;
+            int controlPointsCount = this.vertexBuffer.Count > 0 && this.vertexBuffer.Count < 10 ? 1 : this.vertexBuffer.Count / 5;
+            Log.Debug("Control points count: " + controlPointsCount);
             int index = 0;
 
             Random random = new Random();

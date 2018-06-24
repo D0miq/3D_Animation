@@ -136,11 +136,11 @@
   <data name="&gt;&gt;fileSaveMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;saveFileDialog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;stripContainer.ContentPanel.Name" xml:space="preserve">
+    <value>stripContainer.ContentPanel</value>
   </data>
-  <data name="statusProgressBar.Size" type="System.Drawing.Size, System.Drawing">
-    <value>200, 16</value>
+  <data name="mainMenuStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1080, 24</value>
   </data>
   <data name="toolsRegistrationMenuItem.Text" xml:space="preserve">
     <value>Registration</value>
@@ -154,9 +154,15 @@
   <data name="mainMenuStrip.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="&gt;&gt;mainSplitContainer.Panel2.Parent" xml:space="preserve">
+    <value>mainSplitContainer</value>
+  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="mainMenuStrip.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
+  </data>
+  <data name="statusProgressBar.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 16</value>
   </data>
   <data name="statusStrip.Text" xml:space="preserve">
     <value>statusStrip1</value>
@@ -179,9 +185,6 @@
   <data name="&gt;&gt;openFileDialog.Type" xml:space="preserve">
     <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="fileMenuItem.Text" xml:space="preserve">
-    <value>File</value>
-  </data>
   <data name="fileSaveMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>152, 22</value>
   </data>
@@ -198,8 +201,8 @@
   <data name="$this.Text" xml:space="preserve">
     <value>3D registration</value>
   </data>
-  <data name="mainSplitContainer.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="&gt;&gt;saveFileDialog.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="stripContainer.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
@@ -216,14 +219,8 @@
   <data name="mainMenuStrip.Text" xml:space="preserve">
     <value>menuStrip1</value>
   </data>
-  <data name="&gt;&gt;stripContainer.ContentPanel.Name" xml:space="preserve">
-    <value>stripContainer.ContentPanel</value>
-  </data>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
-  </data>
-  <data name="&gt;&gt;mainMenuStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;mainSplitContainer.Parent" xml:space="preserve">
     <value>stripContainer.ContentPanel</value>
@@ -261,8 +258,8 @@
   <data name="viewSplitContainer.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
     <value>Horizontal</value>
   </data>
-  <data name="&gt;&gt;mainSplitContainer.Panel2.Parent" xml:space="preserve">
-    <value>mainSplitContainer</value>
+  <data name="elementHost.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;mainSplitContainer.Panel1.Name" xml:space="preserve">
     <value>mainSplitContainer.Panel1</value>
@@ -279,26 +276,26 @@
   <data name="&gt;&gt;stripContainer.ContentPanel.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;statusProgressBar.Name" xml:space="preserve">
-    <value>statusProgressBar</value>
-  </data>
   <data name="&gt;&gt;stripContainer.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="&gt;&gt;mainMenuStrip.Name" xml:space="preserve">
     <value>mainMenuStrip</value>
   </data>
-  <data name="&gt;&gt;stripContainer.RightToolStripPanel.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="&gt;&gt;elementHost.Type" xml:space="preserve">
     <value>System.Windows.Forms.Integration.ElementHost, WindowsFormsIntegration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</value>
+  </data>
+  <data name="saveFileDialog.Filter" xml:space="preserve">
+    <value>obj files|*.obj</value>
   </data>
   <data name="&gt;&gt;viewModelsMenuItem.Name" xml:space="preserve">
     <value>viewModelsMenuItem</value>
   </data>
   <data name="&gt;&gt;viewModelsMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="viewSplitContainer.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
   <data name="&gt;&gt;viewSplitContainer.Panel2.Parent" xml:space="preserve">
     <value>viewSplitContainer</value>
@@ -309,8 +306,8 @@
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>
   </data>
-  <data name="&gt;&gt;viewSplitContainer.Panel1.Parent" xml:space="preserve">
-    <value>viewSplitContainer</value>
+  <data name="fileMenuItem.Text" xml:space="preserve">
+    <value>File</value>
   </data>
   <data name="toolsMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>47, 20</value>
@@ -318,8 +315,8 @@
   <data name="viewSplitContainer.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="mainMenuStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1080, 24</value>
+  <data name="&gt;&gt;statusProgressBar.Name" xml:space="preserve">
+    <value>statusProgressBar</value>
   </data>
   <data name="&gt;&gt;mainSplitContainer.Panel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -329,6 +326,9 @@
   </data>
   <data name="&gt;&gt;statusProgressBar.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripProgressBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mainSplitContainer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="viewSplitContainer.SplitterDistance" type="System.Int32, mscorlib">
     <value>119</value>
@@ -348,8 +348,8 @@
   <data name="&gt;&gt;toolsRegistrationMenuItem.Name" xml:space="preserve">
     <value>toolsRegistrationMenuItem</value>
   </data>
-  <data name="&gt;&gt;mainSplitContainer.Name" xml:space="preserve">
-    <value>mainSplitContainer</value>
+  <data name="&gt;&gt;mainMenuStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;stripContainer.TopToolStripPanel.Parent" xml:space="preserve">
     <value>stripContainer</value>
@@ -369,17 +369,14 @@
   <data name="&gt;&gt;fileImportMenuItem.Name" xml:space="preserve">
     <value>fileImportMenuItem</value>
   </data>
-  <data name="saveFileDialog.Filter" xml:space="preserve">
-    <value>obj files|*.obj</value>
+  <data name="&gt;&gt;viewSplitContainer.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;mainSplitContainer.Panel2.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="fileImportMenuItem.Text" xml:space="preserve">
     <value>Import models</value>
-  </data>
-  <data name="&gt;&gt;viewSplitContainer.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="elementHost.Size" type="System.Drawing.Size, System.Drawing">
     <value>1080, 585</value>
@@ -429,8 +426,11 @@
   <data name="elementHost.Text" xml:space="preserve">
     <value>elementHost</value>
   </data>
-  <data name="&gt;&gt;toolsMenuItem.Name" xml:space="preserve">
-    <value>toolsMenuItem</value>
+  <data name="&gt;&gt;toolsRegistrationRigidMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;viewSplitContainer.Panel1.Parent" xml:space="preserve">
+    <value>viewSplitContainer</value>
   </data>
   <data name="statusProgressBar.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -450,14 +450,14 @@
   <data name="&gt;&gt;viewMenuItem.Name" xml:space="preserve">
     <value>viewMenuItem</value>
   </data>
-  <data name="elementHost.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
   <data name="&gt;&gt;stripContainer.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mainSplitContainer.Name" xml:space="preserve">
+    <value>mainSplitContainer</value>
   </data>
   <data name="&gt;&gt;fileMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -497,6 +497,9 @@
   </data>
   <data name="&gt;&gt;mainSplitContainer.Panel1.Parent" xml:space="preserve">
     <value>mainSplitContainer</value>
+  </data>
+  <data name="mainSplitContainer.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;helixViewer.Name" xml:space="preserve">
     <value>helixViewer</value>
@@ -540,23 +543,20 @@
   <data name="viewMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 20</value>
   </data>
-  <data name="&gt;&gt;stripContainer.BottomToolStripPanel.Parent" xml:space="preserve">
-    <value>stripContainer</value>
-  </data>
   <data name="toolsRegistrationRigidMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 22</value>
   </data>
   <data name="&gt;&gt;toolsRegistrationNonrigidMenuItem.Name" xml:space="preserve">
     <value>toolsRegistrationNonrigidMenuItem</value>
   </data>
-  <data name="&gt;&gt;mainSplitContainer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;stripContainer.BottomToolStripPanel.Parent" xml:space="preserve">
+    <value>stripContainer</value>
   </data>
   <data name="&gt;&gt;stripContainer.TopToolStripPanel.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="viewSplitContainer.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+  <data name="&gt;&gt;toolsMenuItem.Name" xml:space="preserve">
+    <value>toolsMenuItem</value>
   </data>
   <data name="statusStrip.Size" type="System.Drawing.Size, System.Drawing">
     <value>1080, 22</value>
@@ -564,8 +564,8 @@
   <data name="mainSplitContainer.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="&gt;&gt;toolsRegistrationRigidMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;stripContainer.RightToolStripPanel.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="&gt;&gt;viewSplitContainer.Panel2.Name" xml:space="preserve">
     <value>viewSplitContainer.Panel2</value>

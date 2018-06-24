@@ -16,10 +16,9 @@
         /// </summary>
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// The basis function r^3 which is used during interpolation.
-        /// </summary>
-        private readonly Func<float, float> basisFunction = value => value * value * value;
+        private const int X = 92;
+
+        private float c;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Rbf"/> class.
@@ -39,6 +38,8 @@
         public List<Vector<float>> Interpolate(List<Vector<float>> sourcePoints, List<Vector<float>> controlPoints, List<Vector<float>> correctionVectors)
         {
             Log.Info("Interpolating the list of the correction vectors.");
+            this.c = this.AverageDistance(controlPoints);
+            Log.Debug("Basis function constant: " + this.c);
 
             // Compute a matrix which contains values of a computed basis function.
             Matrix<float> basisMatrix = this.CreateBasisMatrix(controlPoints);
@@ -58,7 +59,7 @@
                 Vector<float> interpolatedVector = Vector<float>.Build.Dense(4);
                 for (int j = 0; j < xWeightVector.Count; j++)
                 {
-                    float basisValue = this.basisFunction((float)Distance.Euclidean(sourcePoints[i], controlPoints[j]));
+                    float basisValue = this.BasisFunction((float)Distance.Euclidean(sourcePoints[i], controlPoints[j]));
                     interpolatedVector[0] += xWeightVector[j] * basisValue;
                     interpolatedVector[1] += yWeightVector[j] * basisValue;
                     interpolatedVector[2] += zWeightVector[j] * basisValue;
@@ -68,6 +69,38 @@
             }
 
             return interpolatedCorrectionVectors;
+        }
+
+        /// <summary>
+        /// The basis function which is used during interpolation.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private float BasisFunction(float value)
+        {
+           return (float)Math.Pow(Math.E, -c * X * (value * value));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="controlPoints"></param>
+        /// <returns></returns>
+        private float AverageDistance(List<Vector<float>> controlPoints)
+        {
+            Log.Info("Computing average distance between control points.");
+            float averageDistance = 0f;
+            int count = 0;
+            for (int i = 0; i < controlPoints.Count; i++)
+            {
+                for (int j = i; j < controlPoints.Count; j++)
+                {
+                    averageDistance += (float)Distance.Euclidean(controlPoints[i], controlPoints[j]);
+                    count++;
+                }
+            }
+
+            return averageDistance / count;
         }
 
         /// <summary>
@@ -85,7 +118,7 @@
             {
                 for (int j = 0; j < controlPoints.Count; j++)
                 {
-                    basisMatrix[i, j] = this.basisFunction((float)Distance.Euclidean(controlPoints[i], controlPoints[j]));
+                    basisMatrix[i, j] = this.BasisFunction((float)Distance.Euclidean(controlPoints[i], controlPoints[j]));
                 }
             }
 
