@@ -1,6 +1,7 @@
 normal.obj - Základní bysta v normální póze získaná z fotogrammetrie. Použita jako zdrojový objekt pøi každé registraci.
 deformed.obj - Bysta se zmìnìným výrazem, získaná z fotogrammetrie.
-deformedPart.obj - Oblièej vyøíznutý z deformed.objdeformedPart2.ojb - Vìtší èást oblièeje z deformed.obj pro vyzkoušení rùzné velikosti vstupních dat.
+deformedPart.obj - Oblièej vyøíznutý z deformed.obj
+deformedPart2.ojb - Vìtší èást oblièeje z deformed.obj pro vyzkoušení rùzné velikosti vstupních dat.
 result.obj - Výsledek po nerigidní registraci normal.obj na deformed.obj 
 resultPart.obj - Výsledek po nerigidní registraci normal.obj na deformedPart.obj
 resultPart2.obj - Výsledek po nerigidní registraci normal.obj na deformedPart2.obj
